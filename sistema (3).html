@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sistema — Farmácia Couto</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   RESET & TOKENS
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;--red-d:#9B0D22;--red-l:rgba(200,16,46,.1);
+  --blue:#003087;--blue-m:#0046AD;--blue-l:rgba(0,48,135,.08);
+  --green:#10B981;--green-l:rgba(16,185,129,.1);
+  --yellow:#F59E0B;--yellow-l:rgba(245,158,11,.1);
+  --purple:#7C3AED;--purple-l:rgba(124,58,237,.1);
+  --white:#fff;--bg:#F0F2F7;--surface:#fff;
+  --border:#E2E6EF;--border-d:#CDD2DF;
+  --tx:#0F1624;--tx2:#4A5568;--tx3:#8A96AA;
+  --ss:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sm:0 4px 12px rgba(0,0,0,.08);
+  --md:0 8px 24px rgba(0,0,0,.1);
+  --lg:0 20px 48px rgba(0,0,0,.14);
+  --r:8px;--rl:14px;
+  --sidebar:260px;
+}
+html{height:100%}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100%;font-size:14px;line-height:1.5}
+button{font-family:'Inter',sans-serif;cursor:pointer}
+input,select,textarea{font-family:'Inter',sans-serif}
+a{text-decoration:none;color:inherit}
+
+/* ═══════════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════════ */
+#loginPage{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#001a4d 0%,#002d7a 40%,#003899 70%,#001F5E 100%);
+  position:relative;overflow:hidden;
+}
+#loginPage::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.login-card{
+  background:#fff;border-radius:20px;padding:3rem 2.5rem;
+  width:100%;max-width:420px;position:relative;z-index:1;
+  box-shadow:0 32px 80px rgba(0,0,0,.3);
+}
+.login-brand{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+.login-brand-ico{
+  width:48px;height:48px;background:linear-gradient(135deg,var(--red),var(--red-d));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;box-shadow:0 6px 16px rgba(200,16,46,.3);
+}
+.login-brand-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--blue)}
+.login-brand-sub{font-size:.7rem;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase}
+.login-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;margin-bottom:.4rem}
+.login-sub{color:var(--tx2);font-size:.88rem;margin-bottom:2rem}
+.lf-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem}
+.lf-group label{font-size:.8rem;font-weight:600;color:var(--tx2)}
+.lf-group input{
+  padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:var(--r);
+  font-size:.92rem;color:var(--tx);background:var(--bg);outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.lf-group input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,48,135,.1);background:#fff}
+.login-err{background:rgba(200,16,46,.08);border:1px solid rgba(200,16,46,.2);color:var(--red);
+  padding:.75rem 1rem;border-radius:var(--r);font-size:.85rem;margin-bottom:1rem;display:none}
+.login-btn{
+  width:100%;padding:.85rem;background:var(--blue);color:#fff;border:none;
+  border-radius:var(--r);font-size:.95rem;font-weight:600;transition:all .2s;
+  box-shadow:0 6px 20px rgba(0,48,135,.25);
+}
+.login-btn:hover{background:var(--blue-m);transform:translateY(-1px)}
+.login-btn:disabled{opacity:.6;transform:none;cursor:not-allowed}
+.login-note{text-align:center;margin-top:1.5rem;font-size:.78rem;color:var(--tx3)}
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+#app{display:none;min-height:100vh}
+#app.on{display:flex}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:linear-gradient(180deg,#001a4d 0%,#002575 100%);
+  min-height:100vh;display:flex;flex-direction:column;
+  position:sticky;top:0;
+}
+.sb-brand{padding:1.5rem 1.25rem 1rem;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-ico{width:36px;height:36px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.sb-name{font-family:'Playfair Display',serif;color:#fff;font-size:1rem;font-weight:700;line-height:1}
+.sb-tag{font-size:.62rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em}
+.sb-user{padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--blue-m);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0}
+.sb-uname{color:#fff;font-size:.85rem;font-weight:600}
+.sb-urole{font-size:.7rem;color:rgba(255,255,255,.5)}
+.sb-nav{flex:1;padding:.75rem 0;overflow-y:auto}
+.sb-section{padding:.5rem 1.25rem .25rem;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:.65rem 1.25rem;
+  color:rgba(255,255,255,.65);font-size:.875rem;font-weight:500;
+  cursor:pointer;transition:all .15s;border-left:3px solid transparent;margin:1px 0;
+}
+.sb-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--red)}
+.sb-item .ico{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:100px}
+.sb-logout{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.08)}
+.sb-logout button{
+  width:100%;padding:.6rem;background:rgba(200,16,46,.2);color:rgba(255,255,255,.8);
+  border:1px solid rgba(200,16,46,.3);border-radius:var(--r);font-size:.82rem;
+  font-weight:600;transition:all .2s;
+}
+.sb-logout button:hover{background:rgba(200,16,46,.4);color:#fff}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow-x:hidden}
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:.875rem 1.75rem;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.page-title{font-size:1.1rem;font-weight:700;color:var(--tx)}
+.page-sub{font-size:.78rem;color:var(--tx3);margin-top:.1rem}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.topbar-clock{font-size:.8rem;color:var(--tx3);font-weight:500}
+.content{padding:1.75rem;flex:1}
+
+/* ═══════════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════════ */
+/* Cards */
+.card{background:#fff;border-radius:var(--rl);border:1px solid var(--border);box-shadow:var(--ss);padding:1.5rem}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.card-title{font-size:.95rem;font-weight:700;color:var(--tx)}
+.card-sub{font-size:.78rem;color:var(--tx3);margin-top:.15rem}
+
+/* Stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:#fff;border-radius:var(--rl);padding:1.25rem 1.5rem;border:1px solid var(--border);box-shadow:var(--ss);display:flex;align-items:center;gap:1rem}
+.stat-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.stat-val{font-size:1.6rem;font-weight:700;line-height:1}
+.stat-lbl{font-size:.75rem;color:var(--tx3);margin-top:.2rem}
+.stat-chg{font-size:.72rem;font-weight:600;margin-top:.3rem}
+.chg-up{color:var(--green)}
+.chg-dn{color:var(--red)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.1rem;border-radius:var(--r);font-size:.83rem;font-weight:600;border:none;transition:all .2s;cursor:pointer;white-space:nowrap}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(0,48,135,.2)}
+.btn-primary:hover{background:var(--blue-m);transform:translateY(-1px)}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 12px rgba(200,16,46,.2)}
+.btn-red:hover{background:var(--red-d);transform:translateY(-1px)}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.2)}
+.btn-green:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--tx2);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-d);background:var(--bg)}
+.btn-sm{padding:.4rem .8rem;font-size:.78rem}
+.btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:var(--r);background:var(--bg);color:var(--tx2);border:1px solid var(--border)}
+.btn-icon:hover{background:var(--border);color:var(--tx)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* Table */
+.table-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--bg)}
+th{padding:.75rem 1rem;text-align:left;font-size:.75rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:.875rem 1rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--tx)}
+tr:hover td{background:rgba(0,48,135,.02)}
+.td-name{font-weight:600}
+.td-muted{color:var(--tx3);font-size:.8rem}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:.2rem .65rem;border-radius:100px;font-size:.72rem;font-weight:700}
+.badge-blue{background:var(--blue-l);color:var(--blue)}
+.badge-red{background:var(--red-l);color:var(--red)}
+.badge-green{background:var(--green-l);color:#059669}
+.badge-yellow{background:var(--yellow-l);color:#B45309}
+.badge-purple{background:var(--purple-l);color:var(--purple)}
+.badge-gray{background:var(--bg);color:var(--tx2);border:1px solid var(--border)}
+
+/* Forms */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.fg{display:flex;flex-direction:column;gap:.35rem}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:.78rem;font-weight:600;color:var(--tx2)}
+.fg input,.fg select,.fg textarea{
+  padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:var(--r);
+  font-size:.88rem;color:var(--tx);background:var(--bg);outline:none;
+  transition:border-color .2s,box-shadow .2s;width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,48,135,.08);background:#fff}
+.fg textarea{resize:vertical;min-height:80px}
+.fg .hint{font-size:.72rem;color:var(--tx3)}
+
+/* Search bar */
+.search-bar{position:relative;flex:1;max-width:360px}
+.search-bar input{
+  width:100%;padding:.6rem 1rem .6rem 2.4rem;border:1.5px solid var(--border);
+  border-radius:var(--r);font-size:.85rem;background:var(--bg);outline:none;
+  transition:all .2s;
+}
+.search-bar input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(0,48,135,.08)}
+.search-bar .ico{position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:.85rem}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,22,36,.55);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.h{display:none}
+.modal{background:#fff;border-radius:var(--rl);padding:2rem;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:var(--lg)}
+.modal-lg{max-width:780px}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem}
+.modal-title{font-size:1.1rem;font-weight:700}
+.modal-sub{font-size:.8rem;color:var(--tx3);margin-top:.2rem}
+.modal-close{width:32px;height:32px;border:none;background:var(--bg);border-radius:6px;font-size:1rem;color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s}
+.modal-close:hover{background:var(--border)}
+.modal-footer{display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+
+/* Tabs */
+.tabs{display:flex;gap:.25rem;background:var(--bg);padding:4px;border-radius:var(--r);border:1px solid var(--border)}
+.tab{padding:.5rem 1.1rem;border-radius:6px;font-size:.83rem;font-weight:600;cursor:pointer;color:var(--tx3);border:none;background:transparent;transition:all .15s}
+.tab.active{background:#fff;color:var(--tx);box-shadow:var(--ss)}
+
+/* Alert */
+.alert{padding:.875rem 1.1rem;border-radius:var(--r);font-size:.85rem;display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1.25rem}
+.alert-blue{background:var(--blue-l);border:1px solid rgba(0,48,135,.15);color:var(--blue)}
+.alert-red{background:var(--red-l);border:1px solid rgba(200,16,46,.2);color:var(--red-d)}
+.alert-green{background:var(--green-l);border:1px solid rgba(16,185,129,.2);color:#065F46}
+
+/* Toast */
+#toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.6rem}
+.toast{background:#fff;border-radius:10px;padding:.875rem 1.25rem;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--blue);display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:500;animation:tin .25s ease;min-width:260px;max-width:340px}
+.t-ok{border-color:var(--green)}.t-er{border-color:var(--red)}.t-yw{border-color:var(--yellow)}
+@keyframes tin{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Empty state */
+.empty{text-align:center;padding:3.5rem 2rem;color:var(--tx3)}
+.empty-ico{font-size:2.8rem;margin-bottom:.875rem;display:block;opacity:.6}
+.empty-txt{font-size:.9rem;font-weight:500}
+.empty-sub{font-size:.8rem;margin-top:.3rem}
+
+/* Divider */
+.divider{height:1px;background:var(--border);margin:1.25rem 0}
+
+/* Permission grid — 3-state: none / read / edit */
+.perm-grid{display:flex;flex-direction:column;gap:.5rem}
+.perm-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:1rem;padding:.75rem 1rem;background:var(--bg);border-radius:var(--r);border:1px solid var(--border);transition:border-color .15s}
+.perm-row:hover{border-color:var(--border-d)}
+.perm-row.has-access{border-color:rgba(0,48,135,.25);background:rgba(0,48,135,.03)}
+.perm-label{font-size:.83rem;font-weight:600;color:var(--tx)}
+.perm-sub{font-size:.72rem;color:var(--tx3);margin-top:.1rem}
+.perm-module-ico{font-size:1rem;margin-right:.4rem}
+/* Segmented control for none/read/edit */
+.perm-seg{display:flex;background:#E2E6EF;border-radius:6px;padding:3px;gap:2px}
+.perm-seg-btn{
+  padding:.3rem .65rem;border:none;border-radius:4px;font-size:.72rem;font-weight:700;
+  cursor:pointer;color:var(--tx3);background:transparent;transition:all .15s;
+  white-space:nowrap;letter-spacing:.02em;
+}
+.perm-seg-btn.active-none{background:#fff;color:var(--tx2);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.perm-seg-btn.active-read{background:#fff;color:#B45309;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.perm-seg-btn.active-edit{background:var(--blue);color:#fff;box-shadow:0 2px 6px rgba(0,48,135,.25)}
+/* Summary chips in user table */
+.perm-chip{display:inline-flex;align-items:center;gap:3px;padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:700;margin:1px}
+.pchip-edit{background:var(--blue-l);color:var(--blue)}
+.pchip-read{background:var(--yellow-l);color:#92400E}
+.pchip-none{display:none}
+
+/* ── ORÇAMENTO AVULSO ── */
+.orc-items-table{width:100%;border-collapse:collapse;margin:1rem 0}
+.orc-items-table th{padding:.55rem .75rem;text-align:left;font-size:.75rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.04em;background:var(--bg);border-bottom:2px solid var(--border)}
+.orc-items-table td{padding:.55rem .75rem;border-bottom:1px solid var(--border);font-size:.88rem;vertical-align:middle}
+.orc-items-table tr:last-child td{border-bottom:none}
+.orc-item-input{padding:.45rem .65rem;border:1.5px solid var(--border);border-radius:6px;font-size:.85rem;font-family:inherit;color:var(--tx);background:var(--bg);outline:none;transition:border-color .2s}
+.orc-item-input:focus{border-color:var(--blue);background:#fff}
+.orc-item-input.desc{width:100%;min-width:160px}
+.orc-item-input.qty{width:70px;text-align:center}
+.orc-item-input.price{width:110px;text-align:right}
+.orc-total-row{display:flex;justify-content:flex-end;align-items:center;gap:1rem;margin-top:1rem;padding-top:1rem;border-top:2px solid var(--border)}
+.orc-total-label{font-size:.9rem;font-weight:600;color:var(--tx2)}
+.orc-total-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;color:var(--blue)}
+.btn-add-item{display:inline-flex;align-items:center;gap:6px;padding:.45rem .95rem;background:var(--bg);border:1.5px dashed var(--border-d);border-radius:var(--r);font-size:.82rem;font-weight:600;color:var(--tx2);cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-add-item:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
+.btn-del-item{width:28px;height:28px;border:none;background:var(--red-l);color:var(--red);border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+.btn-del-item:hover{background:var(--red);color:#fff}
+.pag-checks{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem}
+.pag-check{display:flex;align-items:center;gap:5px;padding:.35rem .8rem;border:1.5px solid var(--border);border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:500;transition:all .15s;user-select:none}
+.pag-check input{display:none}
+.pag-check.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:.875rem}
+.tl-item{display:flex;gap:1rem;align-items:flex-start}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:4px;position:relative}
+.tl-dot::before{content:'';position:absolute;top:10px;left:4px;width:2px;height:calc(100% + .875rem);background:var(--border)}
+.tl-item:last-child .tl-dot::before{display:none}
+.tl-title{font-size:.85rem;font-weight:600}
+.tl-meta{font-size:.75rem;color:var(--tx3)}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-100%;z-index:100;transition:left .25s}
+  .sidebar.open{left:0}
+  .form-grid,.form-grid-3{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .content{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ LOGIN ════════════════════ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-ico">⚕️</div>
+      <div>
+        <div class="login-brand-name">Farmácia Couto</div>
+        <div class="login-brand-sub">Sistema de Gestão</div>
+      </div>
+    </div>
+    <h2 class="login-title">Bem-vindo de volta</h2>
+    <p class="login-sub">Acesse com suas credenciais para continuar</p>
+    <div id="loginErr" class="login-err"></div>
+    <div class="lf-group">
+      <label>E-mail</label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email"/>
+    </div>
+    <div class="lf-group">
+      <label>Senha</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" id="btnLogin" onclick="doLogin()">Entrar no sistema</button>
+    <p class="login-note">Acesso restrito — Farmácia Couto © 2025</p>
+    <a href="index.html" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1rem;font-size:.8rem;color:var(--tx3);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--tx3)'">
+      ← Voltar ao site
+    </a>
+  </div>
+</div>
+
+<!-- ════════════════════ APP ════════════════════ -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-ico">⚕️</div>
+      <div><div class="sb-name">Farmácia Couto</div><div class="sb-tag">Sistema de Gestão</div></div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div><div class="sb-uname" id="sbName">—</div><div class="sb-urole" id="sbRole">—</div></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="sb-item active" onclick="goTo('dashboard')" data-page="dashboard"><span class="ico">🏠</span> Dashboard</div>
+      <div class="sb-item" onclick="goTo('clientes')" data-page="clientes"><span class="ico">👥</span> Clientes</div>
+
+      <div class="sb-section">Serviços</div>
+      <div class="sb-item" onclick="goTo('manipulacao')" data-page="manipulacao"><span class="ico">⚗️</span> Manipulação</div>
+      <div class="sb-item" onclick="goTo('exames')" data-page="exames"><span class="ico">🔬</span> Exames</div>
+
+      <div class="sb-section">Financeiro</div>
+      <div class="sb-item" onclick="goTo('orcamentos')" data-page="orcamentos"><span class="ico">📋</span> Orçamentos</div>
+      <div class="sb-item" onclick="abrirOrcAvulso()" data-page="orc-avulso"><span class="ico">📄</span> Gerar Orçamento PDF</div>
+
+      <div class="sb-section" id="adminSection" style="display:none">Admin</div>
+      <div class="sb-item" id="menuUsuarios" onclick="goTo('usuarios')" data-page="usuarios" style="display:none"><span class="ico">🛡️</span> Usuários</div>
+    </nav>
+    <div class="sb-logout">
+      <button onclick="doLogout()">⬅ Sair do sistema</button>
+      <a href="index.html" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:.6rem;padding:.5rem;color:rgba(255,255,255,.45);text-decoration:none;font-size:.78rem;border-radius:var(--r);transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.07)';this.style.color='rgba(255,255,255,.8)'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,.45)'">
+        🌐 Ver site público
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title" id="pageTitle">Dashboard</div>
+        <div class="page-sub" id="pageSub">Visão geral do sistema</div>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-clock" id="clock"></span>
+        <button class="btn btn-primary" id="topActionBtn" style="display:none" onclick="openTopAction()"></button>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toasts"></div>
+
+<!-- ════════════════════ MODALS ════════════════════ -->
+
+<!-- MODAL: CLIENTE -->
+<div class="modal-bg h" id="modalCliente">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div><div class="modal-title" id="mClienteTitle">Novo Cliente</div><div class="modal-sub">Preencha os dados do paciente</div></div>
+      <button class="modal-close" onclick="closeModal('modalCliente')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Nome Completo *</label><input id="cNome" placeholder="João da Silva"/></div>
+      <div class="fg"><label>Data de Nascimento</label><input id="cNasc" type="date"/></div>
+      <div class="fg"><label>Sexo</label><select id="cSexo"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
+      <div class="fg"><label>WhatsApp *</label><input id="cTel" placeholder="(75) 99999-9999" maxlength="15" oninput="mPhone(this)"/></div>
+      <div class="fg"><label>E-mail</label><input id="cEmail" type="email" placeholder="joao@email.com"/></div>
+      <div class="fg full"><label>Endereço</label><input id="cEnd" placeholder="Rua, número, bairro, cidade"/></div>
+      <div class="fg full"><label>Observações</label><textarea id="cObs" placeholder="Alergias, condições médicas relevantes, etc."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalCliente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarCliente()">💾 Salvar Cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ATENDIMENTO / SERVIÇO -->
+<div class="modal-bg h" id="modalServico">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div><div class="modal-title">Registrar Serviço</div><div class="modal-sub" id="mServicoSub">—</div></div>
+      <button class="modal-close" onclick="closeModal('modalServico')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg full">
+        <label>Cliente *</label>
+        <input id="sClienteSearch" placeholder="Buscar pelo nome ou telefone..." oninput="buscarClienteServico(this.value)"/>
+        <div id="sClienteResults" style="display:none;position:relative"></div>
+        <input type="hidden" id="sClienteId"/>
+        <div id="sClienteSelected" style="display:none;padding:.5rem .75rem;background:var(--blue-l);border-radius:var(--r);font-size:.83rem;margin-top:.4rem;align-items:center;justify-content:space-between"></div>
+      </div>
+      <div class="fg">
+        <label>Tipo de Serviço *</label>
+        <select id="sTipo" onchange="onTipoChange()">
+          <option value="">Selecione...</option>
+          <option value="manipulacao">⚗️ Manipulação</option>
+          <option value="exame">🔬 Exame</option>
+          <option value="produto">💊 Produto/Venda</option>
+        </select>
+      </div>
+      <div class="fg"><label>Data *</label><input id="sData" type="date"/></div>
+
+      <!-- Manipulação fields -->
+      <div class="fg full" id="fManip" style="display:none">
+        <label>Fórmula / Composição *</label>
+        <textarea id="sFormula" placeholder="Descreva os componentes, concentrações e forma farmacêutica..."></textarea>
+      </div>
+      <div class="fg" id="fPrazo" style="display:none">
+        <label>Prazo de Entrega</label>
+        <input id="sPrazo" type="date"/>
+      </div>
+
+      <!-- Exame fields -->
+      <div class="fg full" id="fExame" style="display:none">
+        <label>Tipo de Exame *</label>
+        <input id="sTipoExame" placeholder="Ex: Hemograma completo, Glicemia, Colesterol total..."/>
+      </div>
+
+      <!-- Produto field -->
+      <div class="fg full" id="fProduto" style="display:none">
+        <label>Produto(s) *</label>
+        <input id="sProdutoDesc" placeholder="Ex: Vitamina C 1000mg x2, Omega 3 Premium..."/>
+      </div>
+
+      <div class="fg"><label>Valor (R$) *</label><input id="sValor" type="number" step="0.01" placeholder="0,00"/></div>
+      <div class="fg">
+        <label>Forma de Pagamento *</label>
+        <select id="sPagamento">
+          <option value="">Selecione...</option>
+          <option value="dinheiro">💵 Dinheiro</option>
+          <option value="pix">📲 Pix</option>
+          <option value="debito">💳 Débito</option>
+          <option value="credito">💳 Crédito</option>
+          <option value="pendente">⏳ A receber</option>
+        </select>
+      </div>
+      <div class="fg full"><label>Observações</label><textarea id="sObs" placeholder="Informações adicionais sobre este serviço..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalServico')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarServico()">💾 Registrar Serviço</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: USUARIO -->
+<div class="modal-bg h" id="modalUsuario">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="mUsuarioTitle">Novo Usuário</div><div class="modal-sub">Defina acesso e permissões</div></div>
+      <button class="modal-close" onclick="closeModal('modalUsuario')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Nome *</label><input id="uNome" placeholder="Nome completo"/></div>
+      <div class="fg"><label>E-mail *</label><input id="uEmail" type="email" placeholder="email@farmacia.com"/></div>
+      <div class="fg"><label>Senha *</label><input id="uSenha" type="password" placeholder="Mínimo 8 caracteres"/></div>
+      <div class="fg">
+        <label>Perfil *</label>
+        <select id="uPerfil" onchange="onPerfilChange()">
+          <option value="atendente">Atendente</option>
+          <option value="farmaceutico">Farmacêutico</option>
+          <option value="gerente">Gerente</option>
+        </select>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="margin-bottom:.75rem"><strong style="font-size:.85rem">Permissões detalhadas</strong><p style="font-size:.75rem;color:var(--tx3);margin-top:.2rem">Personalize o que este usuário pode fazer no sistema</p></div>
+    <div class="perm-grid" id="permGrid"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalUsuario')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarUsuario()">💾 Criar Usuário</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALHES CLIENTE -->
+<div class="modal-bg h" id="modalDetalheCliente">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div><div class="modal-title" id="mdcNome">—</div><div class="modal-sub" id="mdcSub">—</div></div>
+      <button class="modal-close" onclick="closeModal('modalDetalheCliente')">✕</button>
+    </div>
+    <div id="mdcBody"></div>
+  </div>
+</div>
+
+<!-- MODAL: DETALHES ORÇAMENTO -->
+<div class="modal-bg h" id="modalOrc">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Detalhes do Orçamento</div><div class="modal-sub" id="mOrcSub">—</div></div>
+      <button class="modal-close" onclick="closeModal('modalOrc')">✕</button>
+    </div>
+    <div id="mOrcBody"></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modalOrc')">Fechar</button></div>
+  </div>
+</div>
+
+<!-- MODAL: ORÇAMENTO AVULSO PDF -->
+<div class="modal-bg h" id="modalOrcAvulso">
+  <div class="modal modal-lg" style="max-width:720px">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">📄 Gerar Orçamento PDF</div>
+        <div class="modal-sub">Preencha os dados e baixe o orçamento profissional</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalOrcAvulso')">✕</button>
+    </div>
+
+    <!-- Cliente -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+      <div class="fg">
+        <label>Cliente</label>
+        <input id="oa_cliente" placeholder="Nome do cliente" class="orc-item-input" style="width:100%"/>
+      </div>
+      <div class="fg">
+        <label>Telefone</label>
+        <input id="oa_tel" placeholder="(75) 99999-9999" class="orc-item-input" style="width:100%" oninput="mPhone2(this)"/>
+      </div>
+      <div class="fg">
+        <label>Validade do orçamento</label>
+        <input id="oa_validade" type="date" class="orc-item-input" style="width:100%"/>
+      </div>
+      <div class="fg">
+        <label>Número do orçamento</label>
+        <input id="oa_num" placeholder="Auto" class="orc-item-input" style="width:100%" readonly style="background:var(--bg);cursor:default"/>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Itens -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <span style="font-size:.88rem;font-weight:700;color:var(--tx)">Itens do Orçamento</span>
+      <button class="btn-add-item" onclick="addOrcItem()">＋ Adicionar item</button>
+    </div>
+
+    <table class="orc-items-table">
+      <thead>
+        <tr>
+          <th style="width:100%">Descrição do produto/serviço</th>
+          <th>Qtd</th>
+          <th>Valor unit.</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="orcItemsBody"></tbody>
+    </table>
+
+    <div class="orc-total-row">
+      <span class="orc-total-label">Total do orçamento:</span>
+      <span class="orc-total-val" id="orcTotalVal">R$ 0,00</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Pagamento -->
+    <div class="fg" style="margin-bottom:1rem">
+      <label>Formas de pagamento aceitas</label>
+      <div class="pag-checks">
+        <label class="pag-check" onclick="togglePag(this)"><input type="checkbox" value="💵 Dinheiro"/> 💵 Dinheiro</label>
+        <label class="pag-check" onclick="togglePag(this)"><input type="checkbox" value="📲 Pix"/> 📲 Pix</label>
+        <label class="pag-check" onclick="togglePag(this)"><input type="checkbox" value="💳 Débito"/> 💳 Débito</label>
+        <label class="pag-check" onclick="togglePag(this)"><input type="checkbox" value="💳 Crédito"/> 💳 Crédito</label>
+        <label class="pag-check" onclick="togglePag(this)"><input type="checkbox" value="💳 Crédito parcelado"/> 💳 Crédito parcelado</label>
+      </div>
+    </div>
+
+    <!-- Observações -->
+    <div class="fg" style="margin-bottom:1rem">
+      <label>Observações (opcional)</label>
+      <textarea id="oa_obs" placeholder="Ex: Produto manipulado, prazo de entrega 3 dias úteis, produto sujeito a disponibilidade..." style="min-height:72px"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalOrcAvulso')">Cancelar</button>
+      <button class="btn btn-primary" onclick="gerarOrcAvulsoPDF()" style="gap:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+        Baixar PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO SUPABASE
+//  1. Crie uma conta em supabase.com
+//  2. Crie um projeto
+//  3. Cole sua URL e anon key abaixo
+//  4. Execute o SQL de setup no SQL Editor do Supabase
+// ══════════════════════════════════════════════════════════
+var SUPABASE_URL = localStorage.getItem('sb_url') || '';
+var SUPABASE_KEY = localStorage.getItem('sb_key') || '';
+
+var sb = null;
+
+function initSupabase(url, key) {
+  if (!url || !key) return false;
+  try { sb = window.supabase.createClient(url, key); return true; }
+  catch(e) { console.error(e); return false; }
+}
+
+// Load Supabase SDK
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s.onload = function() {
+    var u = localStorage.getItem('sb_url');
+    var k = localStorage.getItem('sb_key');
+    if (u && k) { SUPABASE_URL = u; SUPABASE_KEY = k; initSupabase(u, k); }
+  };
+  document.head.appendChild(s);
+})();
+
+// ══════════════════════════════════════════════════════════
+//  ESTADO DA APLICAÇÃO
+// ══════════════════════════════════════════════════════════
+var STATE = {
+  user: null,        // usuário logado
+  page: 'dashboard', // página atual
+  perms: {},         // permissões do usuário
+};
+
+// Permissões por perfil (default)
+// ── MODELO DE PERMISSÃO ──────────────────────────────────
+// Cada módulo tem 3 estados: 'none' | 'read' | 'edit'
+// 'edit' implica leitura + criação/edição
+// 'read' implica apenas visualização (sem cadastrar/alterar)
+// 'none' bloqueia o acesso completamente
+
+var MODULOS = [
+  { key: 'dashboard',    label: 'Dashboard',    ico: '🏠', sub: 'Visão geral, KPIs e últimos serviços' },
+  { key: 'clientes',     label: 'Clientes',     ico: '👥', sub: 'Cadastro e histórico de pacientes' },
+  { key: 'manipulacao',  label: 'Manipulação',  ico: '⚗️', sub: 'Receituários e fórmulas manipuladas' },
+  { key: 'exames',       label: 'Exames',       ico: '🔬', sub: 'Registro e histórico de exames' },
+  { key: 'orcamentos',   label: 'Orçamentos',   ico: '📋', sub: 'Relatório financeiro e geração de PDF' },
+  { key: 'usuarios',     label: 'Usuários',     ico: '🛡️', sub: 'Criar e gerenciar usuários do sistema' },
+];
+
+// Permissões padrão por perfil
+var PERFIS = {
+  admin:        { label: 'Administrador', cor: 'badge-red',
+    perms: { dashboard:'edit', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'edit' } },
+  gerente:      { label: 'Gerente',       cor: 'badge-purple',
+    perms: { dashboard:'read', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'none' } },
+  farmaceutico: { label: 'Farmacêutico',  cor: 'badge-blue',
+    perms: { dashboard:'read', clientes:'edit', manipulacao:'edit', exames:'read', orcamentos:'read', usuarios:'none' } },
+  atendente:    { label: 'Atendente',     cor: 'badge-gray',
+    perms: { dashboard:'read', clientes:'edit', manipulacao:'read', exames:'read', orcamentos:'none', usuarios:'none' } },
+};
+
+// Garante que todas as chaves de módulo existem nas perms
+function normalisePerms(p, perfil) {
+  p = p || {};
+  // Se não tem nenhuma chave nova, usa perfil padrão
+  var hasNew = MODULOS.some(function(m){ return p[m.key] !== undefined; });
+  if (!hasNew) {
+    var base = (PERFIS[perfil] || PERFIS.atendente).perms;
+    p = Object.assign({}, base, p);
+  }
+  // Garante admin sempre tem tudo
+  if (perfil === 'admin') {
+    MODULOS.forEach(function(m){ if (!p[m.key]) p[m.key] = 'edit'; });
+  }
+  // Preenche módulos faltando com 'none'
+  MODULOS.forEach(function(m){ if (p[m.key] === undefined) p[m.key] = 'none'; });
+  return p;
+}
+
+// Helper: checa se usuário pode acessar modulo (qualquer nível >= read)
+function canView(mod)  { var v=STATE.perms&&STATE.perms[mod]; return v==='read'||v==='edit'; }
+// Helper: checa se usuário pode editar/criar no modulo
+function canEdit(mod)  { return !!(STATE.perms&&STATE.perms[mod]==='edit'); }
+// Legacy compat para código que usa can()
+function can(perm) {
+  // perm pode ser 'clientes_w', 'servicos_w', 'orcamentos_r', 'usuarios_w' (legado)
+  var map = { clientes_w:'clientes', servicos_w:'manipulacao', orcamentos_r:'orcamentos', usuarios_w:'usuarios' };
+  var mod = map[perm] || perm;
+  if (perm.endsWith('_w')) return canEdit(mod);
+  return canView(mod);
+}
+
+// ══════════════════════════════════════════════════════════
+//  CAMADA DE DADOS — Supabase primário, localStorage cache
+// ══════════════════════════════════════════════════════════
+
+// Cache em memória (evita bater no banco a cada render)
+var CACHE = { clientes: null, servicos: null, users: null, lastFetch: {} };
+var CACHE_TTL = 30000; // 30 segundos
+
+function cacheValid(key) {
+  return CACHE[key] !== null && (Date.now() - (CACHE.lastFetch[key]||0)) < CACHE_TTL;
+}
+function setCache(key, data) {
+  CACHE[key] = data;
+  CACHE.lastFetch[key] = Date.now();
+  // Persiste no localStorage como fallback offline
+  try { localStorage.setItem('fc_'+key, JSON.stringify(data)); } catch(e) {}
+}
+function clearCache(key) { CACHE[key] = null; CACHE.lastFetch[key] = 0; }
+
+// Lê do cache em memória → localStorage fallback
+function fromCache(key) {
+  if (CACHE[key]) return CACHE[key];
+  try { var v = localStorage.getItem('fc_'+key); return v ? JSON.parse(v) : []; } catch(e) { return []; }
+}
+
+// ── CLIENTES ─────────────────────────────────────────────
+async function dbGetClientes() {
+  if (cacheValid('clientes')) return CACHE.clientes;
+  if (!sb) { var d = fromCache('clientes'); setCache('clientes',d); return d; }
+  try {
+    var res = await sb.from('clientes').select('*').eq('ativo',true).order('nome');
+    if (res.error) throw res.error;
+    setCache('clientes', res.data || []);
+    return CACHE.clientes;
+  } catch(e) {
+    console.warn('Supabase clientes fallback:', e.message);
+    return fromCache('clientes');
+  }
+}
+
+async function dbSaveCliente(obj, isEdit) {
+  // Normalise field names (sistema usa camelCase, DB usa snake_case)
+  var row = { id:obj.id, nome:obj.nome, nasc:obj.nasc||null,
+    sexo:obj.sexo||null, tel:obj.tel, email:obj.email||null,
+    endereco:obj.endereco||null, obs:obj.obs||null, ativo:true };
+
+  // Optimistic update no cache
+  var cached = fromCache('clientes');
+  if (isEdit) {
+    var idx = cached.findIndex(function(c){return c.id===obj.id;});
+    if (idx>=0) cached[idx] = Object.assign(cached[idx], row); else cached.push(row);
+  } else { cached.push(row); }
+  setCache('clientes', cached);
+
+  if (!sb) return true;
+  try {
+    var res = await sb.from('clientes').upsert([row]);
+    if (res.error) throw res.error;
+    clearCache('clientes'); // força re-fetch do servidor
+    return true;
+  } catch(e) {
+    console.error('dbSaveCliente error:', e);
+    toast('Salvo localmente. Sincronizará quando a conexão for restabelecida.','yw');
+    return true; // otimista — já salvou em cache
+  }
+}
+
+// ── SERVIÇOS ─────────────────────────────────────────────
+async function dbGetServicos(filters) {
+  filters = filters || {};
+  if (cacheValid('servicos') && !Object.keys(filters).length) return CACHE.servicos;
+  if (!sb) { var d = fromCache('servicos'); if(!filters||!Object.keys(filters).length)setCache('servicos',d); return d; }
+  try {
+    var q = sb.from('servicos').select('*').order('orc_num', {ascending:false});
+    if (filters.de)   q = q.gte('data', filters.de);
+    if (filters.ate)  q = q.lte('data', filters.ate);
+    if (filters.tipo) q = q.eq('tipo', filters.tipo);
+    if (filters.pag)  q = q.eq('pagamento', filters.pag);
+    var res = await q;
+    if (res.error) throw res.error;
+    var data = (res.data||[]).map(normaliseServico);
+    if (!Object.keys(filters).length) setCache('servicos', data);
+    return data;
+  } catch(e) {
+    console.warn('Supabase servicos fallback:', e.message);
+    var local = fromCache('servicos');
+    return applyFilters(local, filters);
+  }
+}
+
+// Normalise DB snake_case → app camelCase
+function normaliseServico(s) {
+  return {
+    id: s.id, clienteId: s.cliente_id||s.clienteId, tipo: s.tipo,
+    data: s.data, valor: parseFloat(s.valor)||0, pagamento: s.pagamento,
+    obs: s.obs, orcNum: s.orc_num||s.orcNum,
+    formula: s.formula, prazo: s.prazo,
+    tipoExame: s.tipo_exame||s.tipoExame, produtoDesc: s.produto_desc||s.produtoDesc,
+    criadoPor: s.criado_por||s.criadoPor, criado_em: s.criado_em,
+  };
+}
+
+function applyFilters(list, f) {
+  return list.filter(function(s) {
+    if (f.de   && s.data < f.de)   return false;
+    if (f.ate  && s.data > f.ate)  return false;
+    if (f.tipo && s.tipo !== f.tipo) return false;
+    if (f.pag  && s.pagamento !== f.pag) return false;
+    return true;
+  });
+}
+
+async function dbSaveServico(obj) {
+  // Get next orc_num atomically via DB function (fallback: local counter)
+  var nextNum;
+  if (sb) {
+    try {
+      var r = await sb.rpc('next_orc_num');
+      if (!r.error) nextNum = r.data;
+    } catch(e) {}
+  }
+  if (!nextNum) {
+    nextNum = (parseInt(localStorage.getItem('fc_orcCounter'))||0) + 1;
+    localStorage.setItem('fc_orcCounter', nextNum);
+  }
+
+  var row = {
+    id: obj.id, cliente_id: obj.clienteId, tipo: obj.tipo,
+    data: obj.data, valor: parseFloat(obj.valor)||0, pagamento: obj.pagamento,
+    obs: obj.obs||null, orc_num: nextNum,
+    formula: obj.formula||null, prazo: obj.prazo||null,
+    tipo_exame: obj.tipoExame||null, produto_desc: obj.produtoDesc||null,
+    criado_por: obj.criadoPor||null,
+  };
+
+  // Optimistic cache
+  var normed = normaliseServico(row);
+  var cached = fromCache('servicos');
+  cached.unshift(normed);
+  setCache('servicos', cached);
+
+  if (!sb) return nextNum;
+  try {
+    var res = await sb.from('servicos').insert([row]);
+    if (res.error) throw res.error;
+    clearCache('servicos');
+    return nextNum;
+  } catch(e) {
+    console.error('dbSaveServico error:', e);
+    toast('Salvo localmente. Sincronizará quando a conexão for restabelecida.','yw');
+    return nextNum;
+  }
+}
+
+// ── USUÁRIOS ─────────────────────────────────────────────
+async function dbGetUsers() {
+  if (cacheValid('users')) return CACHE.users;
+  // Always use local for users (sensitive, admin-only)
+  seedAdmin();
+  var local = fromCache('users') || lsArr('users');
+  if (sb) {
+    try {
+      var res = await sb.from('system_users').select('*').order('criado_em');
+      if (!res.error && res.data && res.data.length) {
+        // Merge: DB is source of truth for perms, local has passwords
+        var merged = res.data.map(function(dbU) {
+          var localU = local.find(function(l){return l.email===dbU.email;}) || {};
+          return Object.assign({}, localU, dbU, { perms: dbU.perms || localU.perms || {} });
+        });
+        setCache('users', merged);
+        return merged;
+      }
+    } catch(e) { console.warn('dbGetUsers fallback'); }
+  }
+  setCache('users', local);
+  return local;
+}
+
+async function dbSaveUser(obj, isEdit) {
+  var local = fromCache('users') || lsArr('users');
+  if (isEdit) {
+    var idx = local.findIndex(function(u){return u.id===obj.id;});
+    if (idx>=0) local[idx] = Object.assign(local[idx], obj); else local.push(obj);
+  } else { local.push(obj); }
+  setCache('users', local);
+  localStorage.setItem('fc_users', JSON.stringify(local));
+
+  if (sb) {
+    var dbRow = { id:obj.id, nome:obj.nome, email:obj.email, perfil:obj.perfil, perms:obj.perms, ativo:obj.ativo };
+    try {
+      if (isEdit) { await sb.from('system_users').update(dbRow).eq('id', obj.id); }
+      else { await sb.from('system_users').insert([dbRow]); }
+    } catch(e) { console.warn('dbSaveUser:', e.message); }
+  }
+}
+
+async function dbToggleUser(id, ativo) {
+  var local = fromCache('users') || lsArr('users');
+  var idx = local.findIndex(function(u){return u.id===id;});
+  if (idx>=0) local[idx].ativo = ativo;
+  setCache('users', local);
+  localStorage.setItem('fc_users', JSON.stringify(local));
+  if (sb) { try { await sb.from('system_users').update({ativo:ativo}).eq('id',id); } catch(e){} }
+}
+
+// Seed admin user if not exists
+function seedAdmin() {
+  var users = lsArr('users');
+  if (!users.find(function(u) { return u.email === 'admin@farmaciacouto.com'; })) {
+    users.push({
+      id: 'admin-001',
+      email: 'admin@farmaciacouto.com',
+      senha: 'Couto@2025!',
+      nome: 'Administrador',
+      perfil: 'admin',
+      perms: { dashboard:'edit', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'edit' },
+      ativo: true,
+      criado_em: new Date().toISOString(),
+    });
+    lsSet('users', users);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════════
+function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  var pass  = document.getElementById('loginPass').value;
+  var err   = document.getElementById('loginErr');
+  var btn   = document.getElementById('btnLogin');
+  err.style.display = 'none';
+
+  if (!email || !pass) { showErr('Preencha e-mail e senha.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Entrando...';
+
+  // Try Supabase auth first, then local fallback
+  function tryLocal() {
+    seedAdmin();
+    var users = lsArr('users');
+    var user = users.find(function(u) { return u.email === email && u.senha === pass && u.ativo !== false; });
+    if (user) {
+      STATE.user = user;
+      // Support both old format (clientes_w:bool) and new format (clientes:'edit')
+      var p = user.perms || {};
+      if (typeof p.clientes === 'undefined' && typeof p.clientes_w !== 'undefined') {
+        // migrate legacy perms
+        p = { clientes: p.clientes_w?'edit':'none', manipulacao: p.servicos_w?'edit':'none',
+              exames: p.servicos_w?'edit':'none', orcamentos: p.orcamentos_r?'read':'none',
+              usuarios: p.usuarios_w?'edit':'none' };
+      }
+      STATE.perms = normalisePerms(p, user.perfil);
+      var normUser = Object.assign({},user,{perms:STATE.perms});
+      sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser }));
+      initApp();
+    } else {
+      showErr('E-mail ou senha incorretos.');
+      btn.disabled = false; btn.textContent = 'Entrar no sistema';
+    }
+  }
+
+  function showErr(msg) { err.textContent = msg; err.style.display = 'block'; }
+
+  setTimeout(function() {
+    if (sb) {
+      sb.auth.signInWithPassword({ email: email, password: pass }).then(function(res) {
+        if (res.error) { tryLocal(); }
+        else {
+          // Fetch user profile from DB
+          sb.from('system_users').select('*').eq('email', email).single().then(function(r) {
+            var profile = r.data || {};
+            STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile);
+            STATE.perms = profile.perms || PERFIS[profile.perfil || 'atendente'].perms;
+            sessionStorage.setItem('fc_session', JSON.stringify({ user: STATE.user }));
+            initApp();
+          });
+        }
+      });
+    } else {
+      tryLocal();
+    }
+  }, 400);
+}
+
+function doLogout() {
+  STATE.user = null; STATE.perms = {};
+  sessionStorage.removeItem('fc_session');
+  if (sb) sb.auth.signOut();
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('loginPass').value = '';
+}
+
+function restoreSession() {
+  var s = sessionStorage.getItem('fc_session');
+  if (s) {
+    try {
+      var data = JSON.parse(s);
+      STATE.user = data.user;
+      var p = data.user.perms || (PERFIS[data.user.perfil] || PERFIS.atendente).perms;
+      STATE.perms = normalisePerms(p, data.user.perfil);
+      initApp();
+      return true;
+    } catch(e) {}
+  }
+  return false;
+}
+
+function initApp() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  // sidebar user info
+  var initials = (STATE.user.nome || STATE.user.email || '?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
+  document.getElementById('sbAvatar').textContent = initials;
+  document.getElementById('sbName').textContent = STATE.user.nome || STATE.user.email;
+  document.getElementById('sbRole').textContent = (PERFIS[STATE.user.perfil] || {}).label || 'Usuário';
+  // Re-normalise perms in case stored session is missing new module keys
+  STATE.perms = normalisePerms(STATE.perms, STATE.user.perfil);
+  // admin sections
+  if (canEdit('usuarios')) {
+    document.getElementById('adminSection').style.display = '';
+    document.getElementById('menuUsuarios').style.display = '';
+  }
+  goTo('dashboard');
+  startClock();
+}
+
+// ══════════════════════════════════════════════════════════
+//  NAVEGAÇÃO
+// ══════════════════════════════════════════════════════════
+var PAGE_TITLES = {
+  dashboard:   ['Dashboard', 'Visão geral do sistema'],
+  clientes:    ['Clientes', 'Gerenciar cadastros de pacientes'],
+  manipulacao: ['Manipulação', 'Histórico de manipulações farmacêuticas'],
+  exames:      ['Exames', 'Histórico de exames realizados'],
+  orcamentos:  ['Orçamentos', 'Relatório financeiro e orçamentos'],
+  usuarios:    ['Usuários', 'Gerenciar acessos e permissões'],
+};
+
+function goTo(page) {
+  STATE.page = page;
+  document.querySelectorAll('.sb-item').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.page === page);
+  });
+  var titles = PAGE_TITLES[page] || [page, ''];
+  document.getElementById('pageTitle').textContent = titles[0];
+  document.getElementById('pageSub').textContent = titles[1];
+  renderPage(page);
+}
+
+// ══════════════════════════════════════════════════════════
+//  PAGES
+// ══════════════════════════════════════════════════════════
+function renderPage(page) {
+  var btn = document.getElementById('topActionBtn');
+  btn.style.display = 'none';
+  var pages = {
+    dashboard:   pgDashboard,
+    clientes:    pgClientes,
+    manipulacao: pgManipulacao,
+    exames:      pgExames,
+    orcamentos:  pgOrcamentos,
+    usuarios:    pgUsuarios,
+  };
+  if (pages[page]) pages[page]();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────
+function pgDashboard() {
+  if (!canView('dashboard')) { set('content','<div class="alert alert-red" style="margin-top:1rem">⛔ Você não tem permissão para visualizar o dashboard.</div>'); return; }
+  set('content','<div style="text-align:center;padding:3rem;color:var(--tx3)"><span style="font-size:2rem">⏳</span><p style="margin-top:.5rem">Carregando...</p></div>');
+  Promise.all([dbGetClientes(), dbGetServicos()]).then(function(results) {
+    var clientes = results[0], servicos = results[1];
+    var hoje = new Date().toISOString().split('T')[0];
+    var hojeSrv = servicos.filter(function(s){return s.data===hoje;});
+    var receita = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    var receitaHoje = hojeSrv.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    var manip = servicos.filter(function(s){return s.tipo==='manipulacao';});
+    var dias = [];
+    for(var i=6;i>=0;i--){
+      var d=new Date();d.setDate(d.getDate()-i);
+      var ds=d.toISOString().split('T')[0];
+      var v=servicos.filter(function(s){return s.data===ds;}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+      dias.push({d:ds.slice(5),v:v});
+    }
+    set('content', `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">👥</div><div><div class="stat-val">${clientes.length}</div><div class="stat-lbl">Clientes cadastrados</div></div></div>
+        <div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">📋</div><div><div class="stat-val">${hojeSrv.length}</div><div class="stat-lbl">Atendimentos hoje</div></div></div>
+        <div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">${manip.length}</div><div class="stat-lbl">Manipulações total</div></div></div>
+        <div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">💰</div><div><div class="stat-val">${fmt(receita)}</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+${fmt(receitaHoje)} hoje</div></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Últimos Serviços</div><div class="card-sub">Registros mais recentes</div></div></div>
+          ${servicos.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado</p></div>':
+          '<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
+          servicos.slice(0,8).map(function(s){
+            var cl=clientes.find(function(c){return c.id===s.clienteId;});
+            return '<tr><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
+          }).join('')+'</tbody></table></div>'}
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Receita (7 dias)</div></div>
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+          ${dias.map(function(d){
+            var max=Math.max.apply(null,dias.map(function(x){return x.v;}));
+            var pct=max>0?Math.round(d.v/max*100):0;
+            return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.72rem;color:var(--tx3);width:32px;flex-shrink:0">'+d.d+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:10px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-m));border-radius:4px;transition:width .5s"></div></div><span style="font-size:.72rem;font-weight:600;width:60px;text-align:right">'+fmt(d.v)+'</span></div>';
+          }).join('')}
+          </div>
+        </div>
+      </div>
+    `);
+  });
+}
+
+// ─── CLIENTES ────────────────────────────────────────────
+function pgClientes() {
+  if (!canView('clientes')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  var btn = document.getElementById('topActionBtn');
+  if (canEdit('clientes')) { btn.style.display=''; btn.textContent='＋ Novo Cliente'; }
+  set('content',`
+    <div class="card">
+      <div class="card-head">
+        <div class="search-bar"><span class="ico">🔍</span><input placeholder="Buscar por nome ou telefone..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>
+        ${canEdit('clientes')?'<button class="btn btn-primary" onclick="openModalCliente()">＋ Novo Cliente</button>':''}
+      </div>
+      <div id="clientesTable"><div class="empty"><span class="empty-ico">⏳</span><p class="empty-txt">Carregando...</p></div></div>
+    </div>
+  `);
+  Promise.all([dbGetClientes(), dbGetServicos()]).then(function(r) {
+    set('clientesTable', renderClientesTable(r[0], r[1], ''));
+  });
+}
+
+function filterClientes(q) {
+  Promise.all([dbGetClientes(), dbGetServicos()]).then(function(r) {
+    set('clientesTable', renderClientesTable(r[0], r[1], q));
+  });
+}
+
+function renderClientesTable(clientes, servicos, q) {
+  var list = q ? clientes.filter(function(c){ return (c.nome+(c.tel||'')).toLowerCase().includes(q.toLowerCase()); }) : clientes;
+  if (!list.length) return '<div class="empty"><span class="empty-ico">👥</span><p class="empty-txt">'+(q?'Nenhum cliente encontrado':'Nenhum cliente cadastrado')+'</p>'+(q?'':'<p class="empty-sub">Clique em "+ Novo Cliente" para começar</p>')+'</div>';
+  return '<div class="table-wrap"><table><thead><tr><th>#</th><th>Nome</th><th>WhatsApp</th><th>Atendimentos</th><th>Ações</th></tr></thead><tbody>'+
+    list.map(function(c,i){
+      var total = servicos.filter(function(s){return s.clienteId===c.id;}).length;
+      return '<tr><td class="td-muted">'+(i+1)+'</td><td class="td-name">'+esc(c.nome)+'</td><td>'+esc(c.tel)+'</td><td><span class="badge badge-blue">'+total+' registro(s)</span></td><td style="display:flex;gap:.4rem"><button class="btn btn-sm btn-ghost" onclick="verCliente(\''+c.id+'\')">👁 Ver</button>'+(canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-sm btn-primary" onclick="openModalServico(\''+c.id+'\')">＋ Serviço</button>':'')+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+// ─── VER CLIENTE ─────────────────────────────────────────
+function verCliente(id) {
+  Promise.all([dbGetClientes(), dbGetServicos()]).then(function(r) {
+    var clientes = r[0], allServicos = r[1];
+    var c = clientes.find(function(x){return x.id===id;});
+    if (!c) return;
+    var servicos = allServicos.filter(function(s){return s.clienteId===id;});
+    var receita = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    document.getElementById('mdcNome').textContent = c.nome;
+    document.getElementById('mdcSub').textContent = 'Tel: '+c.tel;
+    set('mdcBody', `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem">
+        <div style="background:var(--blue-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--blue)">${servicos.length}</div><div style="font-size:.75rem;color:var(--tx3)">Atendimentos</div></div>
+        <div style="background:var(--green-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--green)">${fmt(receita)}</div><div style="font-size:.75rem;color:var(--tx3)">Total gasto</div></div>
+        <div style="background:var(--yellow-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">${servicos.filter(function(s){return s.tipo==='manipulacao';}).length}</div><div style="font-size:.75rem;color:var(--tx3)">Manipulações</div></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:.85rem;font-weight:600;margin-bottom:.875rem">Dados Cadastrais</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem;font-size:.83rem">
+        <div><span style="color:var(--tx3)">Endereço: </span>${esc(c.endereco||'—')}</div>
+        <div><span style="color:var(--tx3)">E-mail: </span>${esc(c.email||'—')}</div>
+        <div><span style="color:var(--tx3)">Nascimento: </span>${c.nasc?fmtDate(c.nasc):'—'}</div>
+        <div><span style="color:var(--tx3)">Sexo: </span>${esc(c.sexo||'—')}</div>
+      </div>
+      ${c.obs?'<div style="background:var(--yellow-l);border-radius:var(--r);padding:.75rem;font-size:.8rem;margin-bottom:1.25rem"><strong>Obs:</strong> '+esc(c.obs)+'</div>':''}
+      <div class="divider"></div>
+      <div style="font-size:.85rem;font-weight:600;margin-bottom:.875rem">Histórico de Serviços</div>
+      ${servicos.length===0?'<div class="empty" style="padding:1.5rem"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado</p></div>':
+      '<div class="timeline">'+servicos.slice().sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);}).map(function(s){
+        return '<div class="tl-item"><div class="tl-dot" style="background:'+(s.tipo==='manipulacao'?'var(--purple)':s.tipo==='exame'?'var(--blue)':'var(--green)')+'"></div><div><div class="tl-title">'+tipoBadge(s.tipo)+' <span style="font-weight:600">'+esc(getServicoDesc(s))+'</span></div><div class="tl-meta">'+fmtDate(s.data)+' · '+fmt(s.valor)+' · '+pagBadge(s.pagamento)+'</div>'+(s.obs?'<div class="tl-meta">'+esc(s.obs)+'</div>':'')+'</div></div>';
+      }).join('')+'</div>'}
+    `);
+    openModal('modalDetalheCliente');
+  });
+}
+
+// ─── MANIPULAÇÃO ─────────────────────────────────────────
+function pgManipulacao() {
+  if (!canView('manipulacao')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  var btn = document.getElementById('topActionBtn');
+  if (canEdit('manipulacao')) { btn.style.display=''; btn.textContent='＋ Nova Manipulação'; }
+  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
+  Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
+    var servicos = r[0].filter(function(s){return s.tipo==='manipulacao';}), clientes = r[1];
+    set('content', `
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Histórico de Manipulações</div><div class="card-sub">${servicos.length} registro(s)</div></div>
+          ${canEdit('manipulacao')?'<button class="btn btn-primary" onclick="openModalServico(null,\'manipulacao\')">＋ Nova Manipulação</button>':''}
+        </div>
+        ${servicos.length===0?'<div class="empty"><span class="empty-ico">⚗️</span><p class="empty-txt">Nenhuma manipulação registrada</p></div>':
+        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Fórmula</th><th>Entrega</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
+        servicos.map(function(s){
+          var cl=clientes.find(function(c){return c.id===s.clienteId;});
+          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem">'+esc(s.formula||'—')+'</td><td class="td-muted">'+(s.prazo?fmtDate(s.prazo):'—')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
+        }).join('')+'</tbody></table></div>'}
+      </div>
+    `);
+  });
+}
+
+// ─── EXAMES ──────────────────────────────────────────────
+function pgExames() {
+  if (!canView('exames')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  var btn = document.getElementById('topActionBtn');
+  if (canEdit('exames')) { btn.style.display=''; btn.textContent='＋ Novo Exame'; }
+  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
+  Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
+    var servicos = r[0].filter(function(s){return s.tipo==='exame';}), clientes = r[1];
+    set('content', `
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Histórico de Exames</div><div class="card-sub">${servicos.length} registro(s)</div></div>
+          ${canEdit('exames')?'<button class="btn btn-primary" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>':''}
+        </div>
+        ${servicos.length===0?'<div class="empty"><span class="empty-ico">🔬</span><p class="empty-txt">Nenhum exame registrado</p></div>':
+        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo de Exame</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
+        servicos.map(function(s){
+          var cl=clientes.find(function(c){return c.id===s.clienteId;});
+          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+esc(s.tipoExame||'—')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
+        }).join('')+'</tbody></table></div>'}
+      </div>
+    `);
+  });
+}
+
+// ─── ORÇAMENTOS ──────────────────────────────────────────
+function pgOrcamentos() {
+  if (!canView('orcamentos')) {
+    set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return;
+  }
+  var hoje = new Date().toISOString().split('T')[0];
+  var mesInicio = hoje.slice(0,8)+'01';
+  set('content', `
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="card-head"><div class="card-title">Filtrar Período</div></div>
+      <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">
+        <div class="fg"><label>Data Início</label><input type="date" id="orcDe" value="${mesInicio}" style="width:160px"/></div>
+        <div class="fg"><label>Data Fim</label><input type="date" id="orcAte" value="${hoje}" style="width:160px"/></div>
+        <div class="fg"><label>Tipo</label><select id="orcTipo" style="width:160px"><option value="">Todos</option><option value="manipulacao">Manipulação</option><option value="exame">Exame</option><option value="produto">Produto</option></select></div>
+        <div class="fg"><label>Pagamento</label><select id="orcPag" style="width:160px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>
+        <button class="btn btn-primary" onclick="filtrarOrcamentos()">🔍 Filtrar</button>
+        <button class="btn btn-ghost" onclick="gerarPDFOrcamentos()" style="border-color:var(--red);color:var(--red)">📄 Exportar PDF</button>
+      </div>
+    </div>
+    <div id="orcResult"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>
+  `);
+  filtrarOrcamentos();
+}
+
+function filtrarOrcamentos() {
+  var de   = gv('orcDe');
+  var ate  = gv('orcAte');
+  var tipo = gv('orcTipo');
+  var pag  = gv('orcPag');
+  set('orcResult','<div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div>');
+  Promise.all([dbGetServicos({de:de,ate:ate,tipo:tipo,pag:pag}), dbGetClientes()]).then(function(r) {
+    var list = r[0], clientes = r[1];
+    var total    = list.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    var pendente = list.filter(function(s){return s.pagamento==='pendente';}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    var byPag = {};
+    list.forEach(function(s){byPag[s.pagamento]=(byPag[s.pagamento]||0)+(parseFloat(s.valor)||0);});
+    var html = `
+      <div class="stats-grid" style="margin-bottom:1.25rem">
+        <div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">📋</div><div><div class="stat-val">${list.length}</div><div class="stat-lbl">Atendimentos no período</div></div></div>
+        <div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">${fmt(total)}</div><div class="stat-lbl">Receita total</div></div></div>
+        <div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">${fmt(pendente)}</div><div class="stat-lbl">A receber</div></div></div>
+        <div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">📊</div><div><div class="stat-val">${fmt(total-pendente)}</div><div class="stat-lbl">Recebido</div></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
+        <div class="card"><div class="card-head"><div class="card-title">Por Forma de Pagamento</div></div>
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+          ${Object.entries(byPag).map(function(e){
+            var pct=total>0?Math.round(e[1]/total*100):0;
+            return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.78rem;width:70px;flex-shrink:0">'+pagBadge(e[0])+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:8px"><div style="width:'+pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div><span style="font-size:.75rem;font-weight:600;width:72px;text-align:right">'+fmt(e[1])+'</span></div>';
+          }).join('')||'<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>'}
+          </div>
+        </div>
+        <div class="card"><div class="card-head"><div class="card-title">Por Tipo de Serviço</div></div>
+          ${['manipulacao','exame','produto'].map(function(t){
+            var v=list.filter(function(s){return s.tipo===t;}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+            var n=list.filter(function(s){return s.tipo===t;}).length;
+            if(!n)return'';
+            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)"><div>'+tipoBadge(t)+'</div><div style="text-align:right"><div style="font-weight:600;font-size:.88rem">'+fmt(v)+'</div><div style="font-size:.72rem;color:var(--tx3)">'+n+' registro(s)</div></div></div>';
+          }).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Detalhamento</div><div class="card-sub">${list.length} registro(s) no período</div></div>
+        ${list.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum registro no período selecionado</p></div>':
+        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>'+
+        list.map(function(s){
+          var cl=clientes.find(function(c){return c.id===s.clienteId;});
+          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-size:.8rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(getServicoDesc(s))+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td><td><button class="btn btn-icon btn-sm" onclick="verOrcamento(\''+s.id+'\')">👁</button></td></tr>';
+        }).join('')+'</tbody></table></div>'}
+      </div>
+    `;
+    set('orcResult', html);
+  });
+}
+
+function gerarPDFOrcamentos() {
+  var de   = gv('orcDe');
+  var ate  = gv('orcAte');
+  var tipo = gv('orcTipo');
+  var pag  = gv('orcPag');
+  Promise.all([dbGetServicos({de:de,ate:ate,tipo:tipo,pag:pag}), dbGetClientes()]).then(function(r) {
+    var list = r[0].slice().sort(function(a,b){return b.orcNum - a.orcNum;});
+    var clientes = r[1];
+
+  if (!list.length) { toast('Nenhum registro para exportar.','yw'); return; }
+
+  var total    = list.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+  var recebido = list.filter(function(s){return s.pagamento!=='pendente';}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+  var pendente = total - recebido;
+
+  var TIPO_LABEL  = { manipulacao:'Manipulação', exame:'Exame', produto:'Produto' };
+  var PAG_LABEL   = { dinheiro:'Dinheiro', pix:'Pix', debito:'Débito', credito:'Crédito', pendente:'A receber' };
+
+  // Build HTML page for printing
+  var periodo = (de ? fmtDate(de) : '—') + ' a ' + (ate ? fmtDate(ate) : '—');
+  var tipoStr = tipo ? TIPO_LABEL[tipo]||tipo : 'Todos';
+  var pagStr  = pag  ? PAG_LABEL[pag]||pag   : 'Todos';
+
+  var rows = list.map(function(s) {
+    var cl = clientes.find(function(c){return c.id===s.clienteId;});
+    var desc = s.tipo==='manipulacao' ? (s.formula||'—').slice(0,50)+(s.formula&&s.formula.length>50?'…':'')
+             : s.tipo==='exame'       ? (s.tipoExame||'—')
+             :                          (s.produtoDesc||'—');
+    return '<tr>'
+      + '<td style="width:60px;font-weight:700;color:#003087">#'+padNum(s.orcNum)+'</td>'
+      + '<td style="width:160px">'+(cl ? s_esc(cl.nome) : '—')+'</td>'
+      + '<td style="width:90px">'+(TIPO_LABEL[s.tipo]||s.tipo)+'</td>'
+      + '<td style="font-size:11px;color:#555">'+s_esc(desc)+'</td>'
+      + '<td style="width:100px;text-align:right;font-weight:600">'+fmt(s.valor)+'</td>'
+      + '<td style="width:90px">'+(PAG_LABEL[s.pagamento]||s.pagamento||'—')+'</td>'
+      + '<td style="width:80px;color:#666">'+fmtDate(s.data)+'</td>'
+      +'</tr>';
+  }).join('');
+
+  // Simple HTML escape for PDF content
+  function s_esc(x){ return String(x||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>'
+    + '<title>Orçamentos — Farmácia Couto</title>'
+    + '<style>'
+    + 'body{font-family:Arial,sans-serif;font-size:12px;color:#111;margin:0;padding:24px}'
+    + '.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #003087}'
+    + '.brand{font-size:20px;font-weight:800;color:#003087;letter-spacing:-.5px}'
+    + '.brand-sub{font-size:11px;color:#888;margin-top:2px}'
+    + '.report-title{font-size:15px;font-weight:700;color:#C8102E;margin-bottom:14px}'
+    + '.meta{background:#F0F2F7;border-radius:6px;padding:10px 14px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap}'
+    + '.meta span{font-size:11px;color:#555}.meta strong{color:#111}'
+    + '.summary{display:flex;gap:12px;margin-bottom:18px}'
+    + '.sum-box{flex:1;border:1px solid #ddd;border-radius:6px;padding:10px 14px;text-align:center}'
+    + '.sum-val{font-size:16px;font-weight:800;color:#003087}'
+    + '.sum-val.red{color:#C8102E}.sum-val.green{color:#059669}'
+    + '.sum-lbl{font-size:10px;color:#888;margin-top:2px}'
+    + 'table{width:100%;border-collapse:collapse;margin-top:4px}'
+    + 'thead tr{background:#003087;color:#fff}'
+    + 'th{padding:7px 8px;text-align:left;font-size:11px;font-weight:600}'
+    + 'td{padding:6px 8px;border-bottom:1px solid #eee;font-size:11px;vertical-align:top}'
+    + 'tr:nth-child(even) td{background:#F7F9FC}'
+    + 'tr:last-child td{border-bottom:none}'
+    + '.footer{margin-top:22px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:10px;color:#aaa}'
+    + '@media print{body{padding:12px}.no-print{display:none}}'
+    + '</style></head><body>'
+    + '<div class="header">'
+      + '<div><div class="brand">Farmácia Couto</div><div class="brand-sub">Sistema de Gestão — Relatório de Orçamentos</div></div>'
+      + '<div style="text-align:right;font-size:11px;color:#888">Emitido em: '+new Date().toLocaleDateString('pt-BR')+' às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'<br>Por: '+(STATE.user?s_esc(STATE.user.nome):'—')+'</div>'
+    + '</div>'
+    + '<div class="report-title">📋 Relatório de Orçamentos</div>'
+    + '<div class="meta">'
+      + '<span><strong>Período:</strong> '+periodo+'</span>'
+      + '<span><strong>Tipo de serviço:</strong> '+tipoStr+'</span>'
+      + '<span><strong>Pagamento:</strong> '+pagStr+'</span>'
+      + '<span><strong>Total de registros:</strong> '+list.length+'</span>'
+    + '</div>'
+    + '<div class="summary">'
+      + '<div class="sum-box"><div class="sum-val">'+list.length+'</div><div class="sum-lbl">Atendimentos</div></div>'
+      + '<div class="sum-box"><div class="sum-val green">'+fmt(recebido)+'</div><div class="sum-lbl">Recebido</div></div>'
+      + '<div class="sum-box"><div class="sum-val red">'+fmt(pendente)+'</div><div class="sum-lbl">A receber</div></div>'
+      + '<div class="sum-box"><div class="sum-val">'+fmt(total)+'</div><div class="sum-lbl">Total geral</div></div>'
+    + '</div>'
+    + '<table>'
+      + '<thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th style="text-align:right">Valor</th><th>Pagamento</th><th>Data</th></tr></thead>'
+      + '<tbody>'+rows+'</tbody>'
+    + '</table>'
+    + '<div class="footer"><span>Farmácia Couto — Relatório gerado automaticamente pelo sistema</span><span>Total: '+fmt(total)+'</span></div>'
+    + '</body></html>';
+
+  // Open in new window and trigger print dialog (browser saves as PDF)
+  var win = window.open('', '_blank', 'width=900,height=700');
+  if (!win) { toast('Permita pop-ups para exportar o PDF.','yw'); return; }
+  win.document.write(html);
+  win.document.close();
+  win.onload = function() {
+    setTimeout(function(){ win.focus(); win.print(); }, 400);
+  };
+  toast('PDF aberto em nova janela. Use Ctrl+P ou Salvar como PDF.','ok');
+  }); // end Promise.all
+}
+
+function verOrcamento(id) {
+  Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
+    var s = r[0].find(function(x){return x.id===id;});
+    if (!s) return;
+    var cl = r[1].find(function(c){return c.id===s.clienteId;});
+    document.getElementById('mOrcSub').textContent = 'Orçamento #'+padNum(s.orcNum);
+  var html = `
+    <div style="text-align:center;padding:1rem 0 1.5rem">
+      <div class="orc-num" style="font-size:2.5rem">#${padNum(s.orcNum)}</div>
+      <div style="font-size:.8rem;color:var(--tx3)">Emitido em ${fmtDate(s.data)}</div>
+    </div>
+    <div class="divider"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">
+      <div><span style="color:var(--tx3)">Cliente:</span> <strong>${cl?esc(cl.nome):'—'}</strong></div>
+      <div><span style="color:var(--tx3)">Serviço:</span> ${tipoBadge(s.tipo)}</div>
+      <div><span style="color:var(--tx3)">Pagamento:</span> ${pagBadge(s.pagamento)}</div>
+      ${s.tipo==='manipulacao'?'<div class="full" style="grid-column:1/-1"><span style="color:var(--tx3)">Fórmula:</span> '+esc(s.formula||'—')+'</div>':''}
+      ${s.tipo==='exame'?'<div><span style="color:var(--tx3)">Exame:</span> '+esc(s.tipoExame||'—')+'</div>':''}
+    </div>
+    <div class="divider"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0">
+      <span style="font-size:1rem;font-weight:700">Total</span>
+      <span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">${fmt(s.valor)}</span>
+    </div>
+    ${s.obs?'<div class="divider"></div><p style="font-size:.82rem;color:var(--tx3)">Obs: '+esc(s.obs)+'</p>':''}
+  `;
+  set('mOrcBody', html);
+  openModal('modalOrc');
+  }); // end Promise.all
+}
+
+// ─── USUÁRIOS ────────────────────────────────────────────
+function pgUsuarios() {
+  if (!canEdit('usuarios')) {
+    set('content','<div class="alert alert-red">⛔ Acesso restrito a administradores.</div>'); return;
+  }
+  var btn = document.getElementById('topActionBtn');
+  btn.style.display=''; btn.textContent='＋ Novo Usuário';
+  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
+
+  dbGetUsers().then(function(users) {
+    function permSummary(u) {
+      return MODULOS.map(function(m) {
+        var v = (u.perms||{})[m.key] || 'none';
+        if (v === 'none') return '';
+        var cls = v === 'edit' ? 'pchip-edit' : 'pchip-read';
+        var lbl = v === 'edit' ? '✏️ '+m.label : '👁 '+m.label;
+        return '<span class="perm-chip '+cls+'">'+lbl+'</span>';
+      }).join('');
+    }
+    set('content', `
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Usuários do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissões por módulo</div></div>
+          <button class="btn btn-primary" onclick="openModalUsuario()">＋ Novo Usuário</button>
+        </div>
+        <div class="alert alert-blue" style="margin-bottom:1.25rem">ℹ️ <div><strong>Admin:</strong> admin@farmaciacouto.com / Couto@2025! — Guarde em local seguro. O admin tem acesso total e não pode ser restringido.</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Módulos com acesso</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody>
+            ${users.map(function(u){
+              var pf = PERFIS[u.perfil]||{label:'?', cor:'badge-gray'};
+              return '<tr>'
+                +'<td class="td-name">'+esc(u.nome)+'</td>'
+                +'<td class="td-muted">'+esc(u.email)+'</td>'
+                +'<td><span class="badge '+pf.cor+'">'+pf.label+'</span></td>'
+                +'<td style="max-width:280px;line-height:1.8">'+(u.perfil==='admin'?'<span style="font-size:.75rem;color:var(--tx3)">Acesso total</span>':permSummary(u))+'</td>'
+                +'<td>'+(u.ativo!==false?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-gray">Inativo</span>')+'</td>'
+                +'<td style="display:flex;gap:.4rem;align-items:center">'
+                  +(u.perfil!=='admin'
+                    ?'<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\''+u.id+'\')">✏️ Editar</button>'
+                     +'<button class="btn btn-sm btn-ghost" onclick="toggleUser(\''+u.id+'\','+!(u.ativo!==false)+')">'+(u.ativo!==false?'Desativar':'Ativar')+'</button>'
+                    :'<span style="font-size:.75rem;color:var(--tx3)">🔒 Protegido</span>')
+                +'</td>'
+              +'</tr>';
+            }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `);
+  });
+}
+
+function toggleUser(id, ativo) {
+  dbToggleUser(id, ativo).then(function() {
+    clearCache('users');
+    pgUsuarios();
+    toast('Status do usuário atualizado.','ok');
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  MODAL HANDLERS
+// ══════════════════════════════════════════════════════════
+function openModalCliente(id) {
+  var c = id ? lsArr('clientes').find(function(x){return x.id===id;}) : null;
+  document.getElementById('mClienteTitle').textContent = c ? 'Editar Cliente' : 'Novo Cliente';
+  setVal('cNome',c?c.nome:''); setVal('cNasc',c?c.nasc:'');
+  setVal('cSexo',c?c.sexo:''); setVal('cTel',c?c.tel:''); setVal('cEmail',c?c.email:'');
+  setVal('cEnd',c?c.endereco:''); setVal('cObs',c?c.obs:'');
+  document.getElementById('modalCliente').dataset.editId = id||'';
+  openModal('modalCliente');
+}
+
+function salvarCliente() {
+  var nome=gv('cNome'),tel=gv('cTel');
+  if(!nome||!tel){toast('Preencha nome e WhatsApp.','er');return;}
+  var editId=document.getElementById('modalCliente').dataset.editId;
+  var obj={
+    id: editId||uid(), nome:nome, nasc:gv('cNasc')||null, sexo:gv('cSexo')||null,
+    tel:tel, email:gv('cEmail')||null, endereco:gv('cEnd')||null, obs:gv('cObs')||null,
+  };
+  closeModal('modalCliente');
+  dbSaveCliente(obj, !!editId).then(function() {
+    clearCache('clientes');
+    toast('Cliente '+(editId?'atualizado':'cadastrado')+' com sucesso!','ok');
+    pgClientes();
+  });
+}
+
+function openModalServico(clienteId, tipo) {
+  document.getElementById('sClienteId').value = clienteId||'';
+  document.getElementById('sClienteSearch').value = '';
+  set('sClienteSelected','');
+  document.getElementById('sClienteSelected').style.display='none';
+  document.getElementById('sClienteResults').style.display='none';
+  if(clienteId){
+    var clientes = fromCache('clientes') || [];
+    var cl=clientes.find(function(c){return c.id===clienteId;});
+    if(cl){
+      set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> — '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+      document.getElementById('sClienteSelected').style.display='flex';
+      document.getElementById('mServicoSub').textContent='Cliente: '+cl.nome;
+    }
+  } else {
+    document.getElementById('mServicoSub').textContent='Registrar atendimento para um cliente';
+  }
+  setVal('sTipo',tipo||'');
+  setVal('sData',new Date().toISOString().split('T')[0]);
+  setVal('sFormula','');setVal('sPrazo','');
+  setVal('sTipoExame','');setVal('sProdutoDesc','');
+  setVal('sValor','');setVal('sPagamento','');setVal('sObs','');
+  if(tipo) onTipoChange();
+  openModal('modalServico');
+}
+
+function onTipoChange() {
+  var t = document.getElementById('sTipo').value;
+  document.getElementById('fManip').style.display = t==='manipulacao'?'':'none';
+  document.getElementById('fPrazo').style.display = t==='manipulacao'?'':'none';
+  document.getElementById('fExame').style.display = t==='exame'?'':'none';
+  document.getElementById('fProduto').style.display = t==='produto'?'':'none';
+}
+
+var _srTimeout;
+function buscarClienteServico(q) {
+  clearTimeout(_srTimeout);
+  _srTimeout = setTimeout(function() {
+    if (!q || q.length < 2) { document.getElementById('sClienteResults').style.display='none'; return; }
+    var clientes = fromCache('clientes') || [];
+    var found = clientes.filter(function(c){return (c.nome+(c.tel||'')).toLowerCase().includes(q.toLowerCase());}).slice(0,6);
+    var box = document.getElementById('sClienteResults');
+    if (!found.length) {
+      // Try DB if cache empty
+      dbGetClientes().then(function(all) {
+        var found2 = all.filter(function(c){return (c.nome+(c.tel||'')).toLowerCase().includes(q.toLowerCase());}).slice(0,6);
+        renderClienteDropdown(found2, box);
+      });
+      return;
+    }
+    renderClienteDropdown(found, box);
+  }, 200);
+}
+
+function renderClienteDropdown(clientes, box) {
+  if (!clientes.length) { box.style.display='none'; return; }
+  box.style.display='block';
+  box.innerHTML = '<div style="position:absolute;top:2px;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);z-index:50;overflow:hidden">'+
+    clientes.map(function(c){return '<div onclick="selectClienteServico(\''+c.id+'\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'"><strong>'+esc(c.nome)+'</strong> <span style="color:var(--tx3)">'+esc(c.tel||'')+'</span></div>';}).join('')+'</div>';
+}
+
+function selectClienteServico(id) {
+  var clientes = fromCache('clientes') || [];
+  var cl = clientes.find(function(c){return c.id===id;});
+  if(!cl)return;
+  document.getElementById('sClienteId').value = id;
+  document.getElementById('sClienteSearch').value = '';
+  document.getElementById('sClienteResults').style.display='none';
+  set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> — '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+  document.getElementById('sClienteSelected').style.display='flex';
+  document.getElementById('mServicoSub').textContent='Cliente: '+cl.nome;
+}
+
+function salvarServico() {
+  var clienteId=document.getElementById('sClienteId').value;
+  var tipo=gv('sTipo'),data=gv('sData'),valor=gv('sValor'),pag=gv('sPagamento');
+  if(!clienteId){toast('Selecione um cliente.','er');return;}
+  if(!tipo){toast('Selecione o tipo de serviço.','er');return;}
+  if(!data){toast('Informe a data.','er');return;}
+  if(!valor){toast('Informe o valor.','er');return;}
+  if(!pag){toast('Selecione a forma de pagamento.','er');return;}
+  if(tipo==='manipulacao'&&!gv('sFormula')){toast('Informe a fórmula.','er');return;}
+  if(tipo==='exame'&&!gv('sTipoExame')){toast('Informe o tipo de exame.','er');return;}
+
+  var obj={
+    id:uid(), clienteId:clienteId, tipo:tipo, data:data,
+    valor:parseFloat(valor), pagamento:pag, obs:gv('sObs'),
+    formula:gv('sFormula'), prazo:gv('sPrazo')||null,
+    tipoExame:gv('sTipoExame'), produtoDesc:gv('sProdutoDesc'),
+    criadoPor:STATE.user?STATE.user.nome:'—',
+  };
+
+  closeModal('modalServico');
+
+  dbSaveServico(obj).then(function(num) {
+    clearCache('servicos');
+    toast('Serviço registrado! Orçamento #'+padNum(num),'ok');
+    renderPage(STATE.page);
+  });
+}
+
+// ── MODAL USUÁRIO ─────────────────────────────────────────
+function openModalUsuario(editId) {
+  var u = editId ? lsArr('users').find(function(x){return x.id===editId;}) : null;
+  document.getElementById('mUsuarioTitle').textContent = u ? 'Editar Usuário' : 'Novo Usuário';
+  document.getElementById('modalUsuario').dataset.editId = editId || '';
+  setVal('uNome',  u ? u.nome  : '');
+  setVal('uEmail', u ? u.email : '');
+  setVal('uSenha', '');
+  setVal('uPerfil', u ? u.perfil : 'atendente');
+  var defaultPerms = u ? u.perms : (PERFIS.atendente.perms);
+  renderPermGrid(defaultPerms);
+  // Hide senha field label if editing (optional)
+  var senhaLabel = document.querySelector('#modalUsuario label[for-hint="senha"]');
+  openModal('modalUsuario');
+}
+
+function onPerfilChange() {
+  var perfil = document.getElementById('uPerfil').value;
+  renderPermGrid((PERFIS[perfil] || PERFIS.atendente).perms);
+}
+
+function renderPermGrid(currentPerms) {
+  currentPerms = currentPerms || {};
+  var html = MODULOS.map(function(m) {
+    var val = currentPerms[m.key] || 'none';
+    // usuarios module: never show 'read' (all-or-nothing)
+    var opts = m.key === 'usuarios'
+      ? [
+          { v:'none', lbl:'Sem acesso', cls:'active-none' },
+          { v:'edit', lbl:'✏️ Criar/Editar', cls:'active-edit' },
+        ]
+      : [
+          { v:'none', lbl:'Sem acesso', cls:'active-none' },
+          { v:'read', lbl:'👁 Só leitura', cls:'active-read' },
+          { v:'edit', lbl:'✏️ Ler e editar', cls:'active-edit' },
+        ];
+
+    var btns = opts.map(function(o) {
+      var active = val === o.v ? ' ' + o.cls : '';
+      return '<button type="button" class="perm-seg-btn'+active+'" onclick="setPermVal(\''+m.key+'\',\''+o.v+'\')" id="pseg_'+m.key+'_'+o.v+'">'+o.lbl+'</button>';
+    }).join('');
+
+    var rowClass = val !== 'none' ? ' has-access' : '';
+    return '<div class="perm-row'+rowClass+'" id="prow_'+m.key+'">'
+      + '<div><span class="perm-module-ico">'+m.ico+'</span>'
+      + '<span class="perm-label">'+m.label+'</span>'
+      + '<div class="perm-sub" style="padding-left:1.4rem">'+m.sub+'</div></div>'
+      + '<div class="perm-seg">'+btns+'</div>'
+      + '</div>';
+  }).join('');
+  set('permGrid', html);
+}
+
+function setPermVal(modKey, val) {
+  // Update button states
+  var row = document.getElementById('prow_'+modKey);
+  if (!row) return;
+  row.className = 'perm-row' + (val !== 'none' ? ' has-access' : '');
+  var btns = row.querySelectorAll('.perm-seg-btn');
+  btns.forEach(function(b) {
+    b.className = b.className.replace(/\s*(active-none|active-read|active-edit)/g, '');
+    if (b.id === 'pseg_'+modKey+'_'+val) {
+      var cls = val === 'none' ? 'active-none' : val === 'read' ? 'active-read' : 'active-edit';
+      b.className += ' ' + cls;
+    }
+  });
+}
+
+function getPermGridValues() {
+  var perms = {};
+  MODULOS.forEach(function(m) {
+    // find which btn is active
+    var val = 'none';
+    ['none','read','edit'].forEach(function(v) {
+      var btn = document.getElementById('pseg_'+m.key+'_'+v);
+      if (btn && btn.className.includes('active-')) {
+        if (btn.className.includes('active-none')) val = 'none';
+        else if (btn.className.includes('active-read')) val = 'read';
+        else if (btn.className.includes('active-edit')) val = 'edit';
+      }
+    });
+    perms[m.key] = val;
+  });
+  return perms;
+}
+
+function salvarUsuario() {
+  var editId = document.getElementById('modalUsuario').dataset.editId;
+  var nome   = gv('uNome');
+  var email  = gv('uEmail').toLowerCase();
+  var senha  = gv('uSenha');
+  var perfil = document.getElementById('uPerfil').value;
+
+  if (!nome || !email) { toast('Preencha nome e e-mail.','er'); return; }
+  if (!editId && !senha) { toast('Defina uma senha para o novo usuário.','er'); return; }
+  if (senha && senha.length < 6) { toast('Senha deve ter ao menos 6 caracteres.','er'); return; }
+
+  var users = lsArr('users');
+
+  if (!editId) {
+    if (users.find(function(u){return u.email===email;})) {
+      toast('Este e-mail já está cadastrado.','er'); return;
+    }
+  }
+
+  var perms = getPermGridValues();
+
+  if (editId) {
+    var existing = fromCache('users') || [];
+    var found = existing.find(function(u){return u.id===editId;});
+    var updated = Object.assign({}, found, { nome:nome, email:email, perfil:perfil, perms:perms });
+    if (senha) updated.senha = senha;
+    dbSaveUser(updated, true).then(function() {
+      clearCache('users');
+      closeModal('modalUsuario');
+      toast('Usuário '+nome+' atualizado!','ok');
+      pgUsuarios();
+    });
+  } else {
+    var obj = { id:uid(), nome:nome, email:email, senha:senha, perfil:perfil, perms:perms, ativo:true, criado_em:new Date().toISOString() };
+    if (sb) {
+      sb.auth.admin.createUser({email:email, password:senha, email_confirm:true}).then(function(r){
+        if (r.error) { toast('Erro ao criar no Auth: '+r.error.message,'er'); return; }
+        obj.auth_id = r.data && r.data.user ? r.data.user.id : null;
+        dbSaveUser(obj, false).then(function() {
+          clearCache('users');
+          closeModal('modalUsuario');
+          toast('Usuário '+nome+' criado!','ok');
+          pgUsuarios();
+        });
+      });
+    } else {
+      dbSaveUser(obj, false).then(function() {
+        clearCache('users');
+        closeModal('modalUsuario');
+        toast('Usuário '+nome+' criado!','ok');
+        pgUsuarios();
+      });
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════
+// lsArr still needed for seedAdmin (users bootstrapping)
+function lsArr(k) { try { return JSON.parse(localStorage.getItem('fc_'+k) || '[]'); } catch(e) { return []; } }
+
+function openTopAction() {
+  if (STATE.page === 'clientes') openModalCliente();
+  if (STATE.page === 'manipulacao' || STATE.page === 'exames') openModalServico();
+  if (STATE.page === 'usuarios') openModalUsuario();
+}
+
+function getServicoDesc(s) {
+  if (s.tipo==='manipulacao') return (s.formula||'Manipulação').slice(0,40)+(s.formula&&s.formula.length>40?'…':'');
+  if (s.tipo==='exame') return s.tipoExame||'Exame';
+  return s.produtoDesc||'Produto';
+}
+
+function set(id, html) { var el=document.getElementById(id); if(el) el.innerHTML=html; }
+function gv(id) { var el=document.getElementById(id); return el?el.value.trim():''; }
+function setVal(id,v) { var el=document.getElementById(id); if(el) el.value=v||''; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function padNum(n) { return String(n||0).padStart(4,'0'); }
+function fmt(v) { return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+function fmtDate(d) {
+  if(!d)return'—';
+  try { var dt=new Date(d+'T12:00:00'); return dt.toLocaleDateString('pt-BR'); } catch(e){return d;}
+}
+
+function tipoBadge(t) {
+  var map={manipulacao:'<span class="badge badge-purple">⚗️ Manipulação</span>',exame:'<span class="badge badge-blue">🔬 Exame</span>',produto:'<span class="badge badge-green">💊 Produto</span>'};
+  return map[t]||'<span class="badge badge-gray">'+esc(t)+'</span>';
+}
+function pagBadge(p) {
+  var map={dinheiro:'<span class="badge badge-green">💵 Dinheiro</span>',pix:'<span class="badge badge-blue">📲 Pix</span>',debito:'<span class="badge badge-gray">💳 Débito</span>',credito:'<span class="badge badge-yellow">💳 Crédito</span>',pendente:'<span class="badge badge-red">⏳ A receber</span>'};
+  return map[p]||'<span class="badge badge-gray">'+esc(p||'—')+'</span>';
+}
+
+function openModal(id) { document.getElementById(id).classList.remove('h'); }
+function closeModal(id) { document.getElementById(id).classList.add('h'); }
+
+function toast(msg,type) {
+  var icons={ok:'✅',er:'❌',yw:'⚠️'};
+  var box=document.getElementById('toasts');
+  var el=document.createElement('div');
+  el.className='toast t-'+(type||'ok');
+  el.innerHTML='<span>'+(icons[type]||'ℹ️')+'</span> '+msg;
+  box.appendChild(el);
+  setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(function(){el.remove();},300);},4000);
+}
+
+// mCPF removed — CPF field removed from system
+function mPhone(el){
+  var v=el.value.replace(/\D/g,'');
+  v=v.replace(/^(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2');
+  el.value=v;
+}
+
+function startClock() {
+  function tick() {
+    var now=new Date();
+    var el=document.getElementById('clock');
+    if(el) el.textContent=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+  }
+  tick(); setInterval(tick,1000);
+}
+
+// ══════════════════════════════════════════════════════════
+//  SUPABASE SETUP CHECK
+// ══════════════════════════════════════════════════════════
+function checkSupabaseConfig() {
+  if (!localStorage.getItem('sb_url')) {
+    var banner = document.createElement('div');
+    banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:999;background:var(--yellow);color:#92400E;padding:.6rem 1.5rem;font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:space-between';
+    banner.innerHTML='⚠️ Supabase não configurado — dados salvos apenas localmente. <button onclick="promptSupabase()" style="background:#92400E;color:#fff;border:none;padding:.3rem .9rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-weight:600">Configurar agora</button>';
+    document.body.appendChild(banner);
+  }
+}
+
+function promptSupabase() {
+  var url=prompt('Supabase URL (ex: https://xxxx.supabase.co):');
+  if(!url)return;
+  var key=prompt('Supabase Anon Key:');
+  if(!key)return;
+  localStorage.setItem('sb_url',url.trim());
+  localStorage.setItem('sb_key',key.trim());
+  if(initSupabase(url.trim(),key.trim())) { toast('Supabase conectado!','ok'); location.reload(); }
+  else toast('Erro ao conectar. Verifique as credenciais.','er');
+}
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',function(){
+  // Migrate stale admin: clear if perms missing dashboard key
+  try {
+    var users = JSON.parse(localStorage.getItem('fc_users')||'[]');
+    var changed = false;
+    users = users.map(function(u) {
+      if (u.perms && u.perms.dashboard === undefined) {
+        u.perms = normalisePerms(u.perms, u.perfil);
+        changed = true;
+      }
+      return u;
+    });
+    if (changed) localStorage.setItem('fc_users', JSON.stringify(users));
+    // Also clear fc_session if it has stale perms
+    var sess = sessionStorage.getItem('fc_session');
+    if (sess) {
+      var sd = JSON.parse(sess);
+      if (sd.user && sd.user.perms && sd.user.perms.dashboard === undefined) {
+        sessionStorage.removeItem('fc_session');
+      }
+    }
+  } catch(e) {}
+  seedAdmin();
+  if(!restoreSession()) {
+    document.getElementById('loginPage').style.display='flex';
+  }
+  // Close modals on backdrop click
+  document.querySelectorAll('.modal-bg').forEach(function(bg){
+    bg.addEventListener('click',function(e){ if(e.target===bg) bg.classList.add('h'); });
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+//  ORÇAMENTO AVULSO PDF
+// ══════════════════════════════════════════════════════════
+
+function mPhone2(el) {
+  var v = el.value.replace(/\D/g,'');
+  v = v.replace(/^(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2');
+  el.value = v;
+}
+
+function abrirOrcAvulso() {
+  // Número automático baseado no contador
+  var num = (parseInt(localStorage.getItem('fc_orcCounter'))||0) + 1;
+  var el = document.getElementById('oa_num');
+  if (el) el.value = padNum(num);
+
+  // Validade padrão: 7 dias
+  var val = new Date(); val.setDate(val.getDate() + 7);
+  var elV = document.getElementById('oa_validade');
+  if (elV) elV.value = val.toISOString().split('T')[0];
+
+  // Limpa campos
+  setVal('oa_cliente',''); setVal('oa_tel',''); setVal('oa_obs','');
+
+  // Desmarca pagamentos
+  document.querySelectorAll('.pag-check').forEach(function(el){
+    el.classList.remove('sel');
+    el.querySelector('input').checked = false;
+  });
+
+  // Inicia com 2 linhas de item
+  set('orcItemsBody','');
+  addOrcItem();
+  addOrcItem();
+  calcOrcTotal();
+
+  openModal('modalOrcAvulso');
+}
+
+function addOrcItem() {
+  var tbody = document.getElementById('orcItemsBody');
+  var id = 'oi_' + Date.now() + '_' + Math.random().toString(36).slice(2,5);
+  var tr = document.createElement('tr');
+  tr.id = id;
+  tr.innerHTML =
+    '<td><input class="orc-item-input desc" placeholder="Ex: Manipulação vitamina D3, Exame glicemia..." oninput="calcOrcTotal()"/></td>' +
+    '<td><input class="orc-item-input qty" type="number" min="1" value="1" oninput="calcOrcTotal()"/></td>' +
+    '<td><input class="orc-item-input price" type="number" min="0" step="0.01" placeholder="0,00" oninput="calcOrcTotal()"/></td>' +
+    '<td style="font-weight:700;color:var(--blue);white-space:nowrap" class="subtotal-cell">R$ 0,00</td>' +
+    '<td><button class="btn-del-item" onclick="delOrcItem(\'' + id + '\')" title="Remover">✕</button></td>';
+  tbody.appendChild(tr);
+}
+
+function delOrcItem(id) {
+  var el = document.getElementById(id);
+  if (el) { el.remove(); calcOrcTotal(); }
+}
+
+function calcOrcTotal() {
+  var rows = document.querySelectorAll('#orcItemsBody tr');
+  var total = 0;
+  rows.forEach(function(row) {
+    var qty   = parseFloat(row.querySelector('.qty')  ? row.querySelector('.qty').value   : 0) || 0;
+    var price = parseFloat(row.querySelector('.price') ? row.querySelector('.price').value : 0) || 0;
+    var sub   = qty * price;
+    total += sub;
+    var cell = row.querySelector('.subtotal-cell');
+    if (cell) cell.textContent = 'R$ ' + sub.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  });
+  var el = document.getElementById('orcTotalVal');
+  if (el) el.textContent = 'R$ ' + total.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+}
+
+function togglePag(label) {
+  label.classList.toggle('sel');
+  var inp = label.querySelector('input');
+  inp.checked = !inp.checked;
+}
+
+function getItensOrc() {
+  var rows = document.querySelectorAll('#orcItemsBody tr');
+  var itens = [];
+  rows.forEach(function(row) {
+    var desc  = row.querySelector('.desc')  ? row.querySelector('.desc').value.trim()   : '';
+    var qty   = parseFloat(row.querySelector('.qty')   ? row.querySelector('.qty').value   : 1) || 1;
+    var price = parseFloat(row.querySelector('.price') ? row.querySelector('.price').value : 0) || 0;
+    if (desc || price > 0) itens.push({ desc: desc||'—', qty: qty, price: price, sub: qty * price });
+  });
+  return itens;
+}
+
+function gerarOrcAvulsoPDF() {
+  var cliente  = gv('oa_cliente') || 'Cliente não informado';
+  var tel      = gv('oa_tel');
+  var obs      = gv('oa_obs');
+  var numOrc   = gv('oa_num') || padNum((parseInt(localStorage.getItem('fc_orcCounter'))||0)+1);
+  var validade = gv('oa_validade');
+  var atendente = STATE.user ? STATE.user.nome : '—';
+
+  var itens = getItensOrc();
+  if (!itens.length) { toast('Adicione pelo menos um item ao orçamento.','er'); return; }
+
+  var total = itens.reduce(function(a,i){ return a + i.sub; }, 0);
+
+  // Pagamentos selecionados
+  var pags = [];
+  document.querySelectorAll('.pag-check.sel input').forEach(function(inp){ pags.push(inp.value); });
+
+  var hoje = new Date().toLocaleDateString('pt-BR');
+  var hora  = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var validadeStr = validade ? new Date(validade+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+
+  // ── Linhas da tabela de itens ──
+  var rowsHTML = itens.map(function(it, i) {
+    return '<tr style="background:'+(i%2===0?'#fff':'#f8faff')+'">' +
+      '<td style="padding:10px 14px;font-size:13px;color:#1A1F2E;border-bottom:1px solid #EEF0F4">' + esc(it.desc) + '</td>' +
+      '<td style="padding:10px 14px;font-size:13px;text-align:center;color:#4A5568;border-bottom:1px solid #EEF0F4">' + it.qty + '</td>' +
+      '<td style="padding:10px 14px;font-size:13px;text-align:right;color:#4A5568;border-bottom:1px solid #EEF0F4">R$ ' + it.price.toFixed(2).replace('.',',') + '</td>' +
+      '<td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:700;color:#003087;border-bottom:1px solid #EEF0F4">R$ ' + it.sub.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.') + '</td>' +
+    '</tr>';
+  }).join('');
+
+  var pagsHTML = pags.length
+    ? pags.map(function(p){ return '<span style="display:inline-block;background:#EEF4FF;color:#003087;border:1px solid #C7D9FF;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;margin:3px">'+p+'</span>'; }).join(' ')
+    : '<span style="color:#8A96AA;font-size:12px">Não especificado</span>';
+
+  var obsHTML = obs
+    ? '<div style="margin-top:24px;padding:14px 18px;background:#FFFBEB;border-left:4px solid #F59E0B;border-radius:6px"><p style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:4px">Observações</p><p style="font-size:12px;color:#78350F;line-height:1.6">'+esc(obs)+'</p></div>'
+    : '';
+
+  var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>' +
+    '<title>Orçamento #'+numOrc+' — Farmácia Couto</title>' +
+    '<style>' +
+      '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");' +
+      '*{box-sizing:border-box;margin:0;padding:0}' +
+      'html,body{font-family:"Inter",Arial,sans-serif;background:#fff;color:#1A1F2E;-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+      'body{padding:0}' +
+      '.page{max-width:794px;margin:0 auto;padding:48px 52px;min-height:1123px;display:flex;flex-direction:column}' +
+      '@media print{.no-print{display:none!important}.page{padding:36px 44px}}' +
+      '@page{margin:0;size:A4}' +
+    '</style>' +
+    '</head><body>' +
+    '<div class="page">' +
+
+    // ── CABEÇALHO ──
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:28px;border-bottom:3px solid #003087;margin-bottom:32px">' +
+      '<div>' +
+        '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">' +
+          '<div style="width:48px;height:48px;background:linear-gradient(135deg,#C8102E,#9B0D22);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">⚕️</div>' +
+          '<div>' +
+            '<div style="font-size:22px;font-weight:800;color:#003087;letter-spacing:-.5px">Farmácia Couto</div>' +
+            '<div style="font-size:11px;color:#8A96AA;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-top:2px">Saúde &amp; Bem-estar</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:12px;color:#4A5568;line-height:1.8;margin-top:4px">' +
+          '<span>📞 (75) 99115-4571</span><br/>' +
+          '<span>📸 @farmaciacouto</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="text-align:right">' +
+        '<div style="background:linear-gradient(135deg,#003087,#0046AD);color:#fff;border-radius:12px;padding:16px 22px;display:inline-block">' +
+          '<div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-bottom:4px">Orçamento</div>' +
+          '<div style="font-size:26px;font-weight:800;letter-spacing:-.5px">#'+numOrc+'</div>' +
+        '</div>' +
+        '<div style="margin-top:10px;font-size:11px;color:#8A96AA;line-height:1.8">' +
+          '<div>Emitido em: <strong style="color:#1A1F2E">'+hoje+' às '+hora+'</strong></div>' +
+          '<div>Válido até: <strong style="color:#C8102E">'+validadeStr+'</strong></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    // ── DADOS DO CLIENTE ──
+    '<div style="background:#F7F8FA;border-radius:12px;padding:18px 22px;margin-bottom:28px;display:flex;gap:40px;flex-wrap:wrap">' +
+      '<div>' +
+        '<div style="font-size:10px;font-weight:700;color:#8A96AA;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">Cliente</div>' +
+        '<div style="font-size:16px;font-weight:700;color:#1A1F2E">'+esc(cliente)+'</div>' +
+      '</div>' +
+      (tel ? '<div><div style="font-size:10px;font-weight:700;color:#8A96AA;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">Telefone</div><div style="font-size:15px;font-weight:600;color:#1A1F2E">'+esc(tel)+'</div></div>' : '') +
+      '<div style="margin-left:auto">' +
+        '<div style="font-size:10px;font-weight:700;color:#8A96AA;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">Atendente</div>' +
+        '<div style="font-size:14px;font-weight:600;color:#1A1F2E">'+esc(atendente)+'</div>' +
+      '</div>' +
+    '</div>' +
+
+    // ── TABELA DE ITENS ──
+    '<div style="margin-bottom:24px">' +
+      '<div style="font-size:11px;font-weight:700;color:#8A96AA;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Itens do Orçamento</div>' +
+      '<table style="width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;border:1px solid #EEF0F4">' +
+        '<thead>' +
+          '<tr style="background:#003087">' +
+            '<th style="padding:11px 14px;text-align:left;font-size:11px;font-weight:600;color:#fff;letter-spacing:.04em;text-transform:uppercase">Descrição</th>' +
+            '<th style="padding:11px 14px;text-align:center;font-size:11px;font-weight:600;color:#fff;letter-spacing:.04em;text-transform:uppercase;width:60px">Qtd</th>' +
+            '<th style="padding:11px 14px;text-align:right;font-size:11px;font-weight:600;color:#fff;letter-spacing:.04em;text-transform:uppercase;width:120px">Valor unit.</th>' +
+            '<th style="padding:11px 14px;text-align:right;font-size:11px;font-weight:600;color:#fff;letter-spacing:.04em;text-transform:uppercase;width:130px">Subtotal</th>' +
+          '</tr>' +
+        '</thead>' +
+        '<tbody>'+rowsHTML+'</tbody>' +
+      '</table>' +
+    '</div>' +
+
+    // ── TOTAL ──
+    '<div style="display:flex;justify-content:flex-end;margin-bottom:28px">' +
+      '<div style="background:linear-gradient(135deg,#003087,#0046AD);color:#fff;border-radius:12px;padding:18px 28px;text-align:right;min-width:220px">' +
+        '<div style="font-size:11px;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Total do Orçamento</div>' +
+        '<div style="font-size:28px;font-weight:800;letter-spacing:-.5px">R$ '+total.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.')+'</div>' +
+      '</div>' +
+    '</div>' +
+
+    // ── PAGAMENTO ──
+    '<div style="margin-bottom:20px">' +
+      '<div style="font-size:11px;font-weight:700;color:#8A96AA;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Formas de pagamento aceitas</div>' +
+      '<div>'+pagsHTML+'</div>' +
+    '</div>' +
+
+    obsHTML +
+
+    // ── RODAPÉ ──
+    '<div style="margin-top:auto;padding-top:28px;border-top:1px solid #EEF0F4;display:flex;justify-content:space-between;align-items:flex-end">' +
+      '<div style="font-size:11px;color:#8A96AA;line-height:1.7">' +
+        '<div style="font-weight:600;color:#1A1F2E;margin-bottom:2px">Farmácia Couto</div>' +
+        '<div>Este orçamento é válido até <strong style="color:#C8102E">'+validadeStr+'</strong></div>' +
+        '<div>Dúvidas? Entre em contato: (75) 99115-4571</div>' +
+      '</div>' +
+      '<div style="text-align:right">' +
+        '<div style="width:180px;border-top:1.5px solid #1A1F2E;padding-top:6px;font-size:11px;color:#8A96AA;text-align:center">Assinatura do responsável</div>' +
+      '</div>' +
+    '</div>' +
+
+    '</div>' + // .page
+    '<div class="no-print" style="position:fixed;bottom:20px;right:20px">' +
+      '<button onclick="window.print()" style="background:#003087;color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,48,135,.3);display:flex;align-items:center;gap:8px">📥 Salvar PDF</button>' +
+    '</div>' +
+    '</body></html>';
+
+  var win = window.open('', '_blank', 'width=870,height:760');
+  if (!win) { toast('Permita pop-ups para gerar o PDF.','yw'); return; }
+  win.document.write(html);
+  win.document.close();
+  win.onload = function() { setTimeout(function(){ win.focus(); win.print(); }, 500); };
+
+  closeModal('modalOrcAvulso');
+  toast('PDF gerado! Use "Salvar como PDF" na janela de impressão.','ok');
+}
+
+/*
+════════════════════════════════════════════════
+  CREDENCIAIS DO ADMINISTRADOR
+  E-mail: admin@farmaciacouto.com
+  Senha:  Couto@2025!
+
+  SQL PARA CONFIGURAR O SUPABASE:
+  Execute no SQL Editor do seu projeto Supabase
+
+  create table clientes (
+    id text primary key,
+    nome text not null, nasc date, sexo text,
+    tel text, email text, endereco text, obs text,
+    criado_em timestamptz default now()
+  );
+  create table servicos (
+    id text primary key, clienteId text references clientes(id),
+    tipo text, data date, valor numeric, pagamento text, obs text,
+    orcNum int, formula text, prazo date,
+    tipoExame text, produtoDesc text, criadoPor text,
+    criado_em timestamptz default now()
+  );
+  create table system_users (
+    id text primary key, nome text, email text unique,
+    perfil text, perms jsonb, ativo bool default true,
+    criado_em timestamptz default now()
+  );
+  alter table clientes enable row level security;
+  alter table servicos enable row level security;
+  alter table system_users enable row level security;
+  create policy "auth_only" on clientes for all using (auth.role()='authenticated') with check (auth.role()='authenticated');
+  create policy "auth_only" on servicos for all using (auth.role()='authenticated') with check (auth.role()='authenticated');
+  create policy "auth_only" on system_users for all using (auth.role()='authenticated') with check (auth.role()='authenticated');
+════════════════════════════════════════════════
+*/
+</script>
+</body>
+</html>
