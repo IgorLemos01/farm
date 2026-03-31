@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Farmácia Couto — Cuidando da sua saúde e bem-estar</title>
+<meta name="description" content="Farmácia Couto: atendimento humanizado, manipulação farmacêutica, exames e produtos de qualidade. Fale pelo WhatsApp."/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;--red-d:#9B0D22;
+  --blue:#003087;--blue-m:#0046AD;
+  --off:#F7F8FA;--gl:#EEF0F4;
+  --gr:#8A92A0;--gd:#3D4557;--tx:#1A1F2E;
+  --ss:0 2px 8px rgba(0,48,135,.07);
+  --sm:0 8px 28px rgba(0,48,135,.11);
+  --sl:0 20px 56px rgba(0,48,135,.15);
+  --r:12px;--rl:20px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;color:var(--tx);background:#fff;overflow-x:hidden}
+
+/* ─── NAVBAR ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(0,48,135,.07);
+  height:68px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--ss);
+}
+.nlogo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nico{width:40px;height:40px;background:linear-gradient(135deg,var(--red),var(--red-d));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 4px 12px rgba(200,16,46,.26)}
+.ntxt{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--blue);line-height:1}
+.nsub{font-size:.6rem;color:var(--gr);letter-spacing:.09em;text-transform:uppercase}
+.nlinks{display:flex;gap:2rem;list-style:none}
+.nlinks a{text-decoration:none;color:var(--gd);font-size:.9rem;font-weight:500;transition:color .2s;position:relative}
+.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transition:transform .2s;border-radius:2px}
+.nlinks a:hover{color:var(--red)}
+.nlinks a:hover::after{transform:scaleX(1)}
+.nwa{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#25D366;color:#fff;
+  padding:.52rem 1.25rem;border-radius:8px;
+  text-decoration:none;font-size:.85rem;font-weight:700;
+  transition:all .2s;box-shadow:0 4px 14px rgba(37,211,102,.28);
+}
+.nwa:hover{background:#1da851;transform:translateY(-1px)}
+@media(max-width:860px){.nlinks{display:none}nav{padding:0 1.25rem}}.nsistema{display:none}@media(min-width:861px){.nsistema{display:inline-flex}}
+
+/* ─── REVEAL ─── */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* ─── SECTION BASE ─── */
+section{padding:6rem 2rem}@media(max-width:480px){section{padding:4rem 1.25rem}}
+.si{max-width:1160px;margin:0 auto}
+.stag{display:inline-block;background:rgba(200,16,46,.08);color:var(--red);font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:.32rem .95rem;border-radius:100px;margin-bottom:.9rem}
+.stit{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,4vw,2.7rem);font-weight:900;line-height:1.12;color:var(--tx);margin-bottom:1rem}
+.stit span{color:var(--red)}
+.sdesc{color:var(--gr);font-size:1rem;line-height:1.75;max-width:580px}
+
+/* ═══════════ 1. HERO ═══════════ */
+#hero{
+  min-height:100vh;
+  background:linear-gradient(160deg,#001a4d 0%,#002d7a 35%,#003899 65%,#001F5E 100%);
+  position:relative;overflow:hidden;display:flex;align-items:center;padding-top:68px;
+}
+.hbg{position:absolute;inset:0;pointer-events:none}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hov{position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,26,77,.5) 0%,rgba(0,45,122,.3) 55%,rgba(200,16,46,.14) 100%)}
+.hsh{position:absolute;border-radius:50%}
+.h1{width:680px;height:680px;top:-240px;right:-160px;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 70%)}
+.h2{width:380px;height:380px;bottom:-140px;left:-90px;background:radial-gradient(circle,rgba(200,16,46,.11) 0%,transparent 70%)}
+.h3{width:240px;height:240px;top:38%;right:14%;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%)}
+.hgr{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:50px 50px}
+.hcon{position:relative;z-index:2;max-width:1160px;margin:0 auto;padding:4rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+@media(max-width:860px){.hcon{grid-template-columns:1fr}.hvis{display:none}}
+.hbadge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.38rem .95rem;border-radius:100px;font-size:.78rem;font-weight:500;margin-bottom:1.4rem}
+.hpul{width:6px;height:6px;background:#4ADE80;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.htit{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,3.9rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1.4rem}
+.htit em{font-style:normal;color:#FFC2CC}
+.hdesc{color:rgba(255,255,255,.78);font-size:1.03rem;line-height:1.72;margin-bottom:2rem;max-width:470px}
+.hact{display:flex;gap:1rem;flex-wrap:wrap}
+.hbtn-wa{
+  display:inline-flex;align-items:center;gap:9px;background:#25D366;color:#fff;
+  padding:.82rem 1.9rem;border-radius:10px;font-size:.93rem;font-weight:700;
+  text-decoration:none;transition:all .25s;box-shadow:0 8px 24px rgba(37,211,102,.36);
+}
+.hbtn-wa:hover{background:#1da851;transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,211,102,.46)}
+.hbtn-o{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.32);padding:.82rem 1.9rem;border-radius:10px;font-size:.93rem;font-weight:600;text-decoration:none;transition:all .25s}
+.hbtn-o:hover{background:rgba(255,255,255,.09);border-color:#fff}
+.hstats{display:flex;gap:2rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.14)}
+.hst{color:#fff}
+.hst strong{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;display:block}
+.hst span{font-size:.78rem;color:rgba(255,255,255,.58)}
+.hvis{position:relative;display:flex;justify-content:center;align-items:center}
+.hcard{background:rgba(255,255,255,.1);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.18);border-radius:var(--rl);padding:2rem;animation:flt 6s ease-in-out infinite;max-width:340px;width:100%}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hcico{font-size:2.8rem;margin-bottom:.9rem}
+.hctit{color:#fff;font-size:1.15rem;font-weight:700;margin-bottom:.45rem}
+.hctxt{color:rgba(255,255,255,.68);font-size:.87rem;line-height:1.65}
+.hcpil{display:inline-block;background:rgba(37,211,102,.22);color:#A7F3D0;font-size:.72rem;font-weight:700;padding:.22rem .7rem;border-radius:100px;margin-top:.9rem}
+.chip{position:absolute;background:#fff;border-radius:10px;padding:.7rem .95rem;box-shadow:var(--sl);display:flex;align-items:center;gap:9px;font-size:.8rem;font-weight:700;color:var(--tx)}
+.c1{top:-18px;right:-18px;animation:flt2 5s ease-in-out infinite}
+.c2{bottom:-8px;left:-18px;animation:flt2 5s ease-in-out -1.2s infinite}
+@keyframes flt2{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+.cdot{width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0}
+.cdot.r{background:var(--red)}
+
+/* ═══════════ 2. SOBRE ═══════════ */
+#sobre{background:var(--off)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+@media(max-width:860px){.sg{grid-template-columns:1fr;gap:2.5rem}}
+.svis{position:relative;overflow:visible}
+.sbox{background:linear-gradient(135deg,var(--blue),var(--blue-m));border-radius:var(--rl);aspect-ratio:4/3;min-height:260px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:var(--sl);overflow:hidden}
+.sbg-ico{font-size:8rem;opacity:.08;position:absolute}
+.sov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:2rem}
+.sov-ico{font-size:4.5rem;margin-bottom:.9rem}
+.sov h3{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;margin-bottom:.4rem}
+.sov p{font-size:.88rem;opacity:.75}
+.sbadge{position:absolute;bottom:-18px;right:-18px;background:var(--red);color:#fff;border-radius:14px;padding:1rem 1.25rem;box-shadow:0 12px 32px rgba(200,16,46,.36);text-align:center;z-index:2}
+.sbadge strong{font-family:'Playfair Display',serif;font-size:1.9rem;display:block}
+.sbadge span{font-size:.7rem;font-weight:600;opacity:.82}
+.sfeats{margin-top:2.2rem;display:flex;flex-direction:column;gap:1.1rem}
+.feat{display:flex;gap:.95rem;align-items:flex-start;padding:1.1rem;background:#fff;border-radius:var(--r);box-shadow:var(--ss);border-left:3px solid var(--red);transition:transform .2s,box-shadow .2s}
+.feat:hover{transform:translateX(4px);box-shadow:var(--sm)}
+.fi{font-size:1.45rem;flex-shrink:0;margin-top:2px}
+.ft{font-weight:700;font-size:.93rem;margin-bottom:.18rem}
+.fd{font-size:.83rem;color:var(--gr);line-height:1.55}
+
+/* ═══════════ 3. ENDEREÇO ═══════════ */
+#endereco{background:#fff}
+.end-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:3.5rem;align-items:start}
+@media(max-width:860px){.end-grid{grid-template-columns:1fr}}
+.end-items{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+.end-item{display:flex;gap:1rem;align-items:center;padding:.95rem 1.1rem;background:var(--off);border-radius:var(--r);border:1px solid var(--gl);transition:border-color .2s,box-shadow .2s}
+.end-item:hover{border-color:rgba(0,48,135,.18);box-shadow:var(--ss)}
+.end-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.ei-r{background:rgba(200,16,46,.1)}
+.ei-b{background:rgba(0,48,135,.1)}
+.ei-g{background:rgba(16,185,129,.1)}
+.end-item strong{display:block;font-size:.86rem;font-weight:700;color:var(--tx)}
+.end-item span{font-size:.8rem;color:var(--gr);margin-top:.1rem;display:block}
+.end-map-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:1.6rem;
+  background:var(--blue);color:#fff;padding:.72rem 1.5rem;border-radius:var(--r);
+  text-decoration:none;font-size:.87rem;font-weight:700;
+  transition:all .2s;box-shadow:0 6px 18px rgba(0,48,135,.2);
+}
+.end-map-btn:hover{background:var(--blue-m);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,48,135,.28)}
+.map-wrap{border-radius:var(--rl);overflow:hidden;box-shadow:var(--sl);border:1px solid var(--gl);position:relative}
+.map-wrap iframe{width:100%;height:380px;border:none;display:block}
+@media(max-width:860px){.map-wrap iframe{height:260px}}@media(max-width:480px){.map-wrap iframe{height:220px}}
+.map-link{
+  position:absolute;bottom:1rem;right:1rem;
+  background:#fff;color:var(--blue);
+  padding:.5rem 1rem;border-radius:8px;
+  font-size:.77rem;font-weight:700;
+  text-decoration:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.14);
+  display:flex;align-items:center;gap:5px;
+  transition:all .2s;
+}
+.map-link:hover{background:var(--blue);color:#fff}
+
+/* ═══════════ 4. DIFERENCIAIS ═══════════ */
+#diferenciais{background:linear-gradient(150deg,var(--blue) 0%,#001d5c 100%);position:relative;overflow:hidden}
+#diferenciais::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:44px 44px}
+.din{position:relative;z-index:1;text-align:center}
+.din .stag{background:rgba(255,255,255,.1);color:rgba(255,255,255,.88)}
+.din .stit{color:#fff}
+.din .stit span{color:#FFC2CC}
+.din .sdesc{color:rgba(255,255,255,.68);margin:0 auto 3rem}
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+@media(max-width:860px){.dg{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.dg{grid-template-columns:1fr}}
+.dc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:var(--rl);padding:2rem 1.6rem;text-align:center;color:#fff;transition:all .3s;backdrop-filter:blur(8px)}
+.dc:hover{background:rgba(255,255,255,.13);transform:translateY(-4px)}
+.di{font-size:2.4rem;display:block;margin-bottom:.9rem}
+.dc strong{display:block;font-weight:700;font-size:.97rem;margin-bottom:.45rem}
+.dc p{font-size:.83rem;color:rgba(255,255,255,.62);line-height:1.62}
+
+/* ═══════════ 5. WHATSAPP ═══════════ */
+#whatsapp{background:var(--off)}
+.wa-inner{max-width:660px;margin:0 auto;text-align:center}
+.wa-card{background:#fff;border-radius:var(--rl);padding:3rem 2rem;box-shadow:var(--sl);border:1px solid var(--gl);position:relative;overflow:hidden}
+.wa-card::before{content:'';position:absolute;top:-70px;right:-70px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(37,211,102,.07) 0%,transparent 70%)}
+.wa-card::after{content:'';position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,48,135,.05) 0%,transparent 70%)}
+.wa-ico{width:88px;height:88px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 8px 28px rgba(37,211,102,.3);animation:wapulse 2.8s infinite;position:relative;z-index:1}
+@keyframes wapulse{0%,100%{box-shadow:0 8px 28px rgba(37,211,102,.3)}50%{box-shadow:0 8px 40px rgba(37,211,102,.52),0 0 0 14px rgba(37,211,102,.06)}}
+.wa-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--tx);margin-bottom:.7rem;position:relative;z-index:1}
+.wa-desc{color:var(--gr);font-size:.97rem;line-height:1.74;margin-bottom:2rem;position:relative;z-index:1}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:11px;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;padding:1rem 2.4rem;border-radius:50px;
+  font-size:1rem;font-weight:700;text-decoration:none;
+  transition:all .25s;box-shadow:0 8px 24px rgba(37,211,102,.3);
+  position:relative;z-index:1;
+}
+.wa-btn:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(37,211,102,.44)}
+.wa-num{margin-top:1.1rem;font-size:.85rem;color:var(--gr);position:relative;z-index:1}
+.wa-num strong{color:var(--tx)}
+.wa-insta{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:1.4rem;font-size:.8rem;color:var(--gr);position:relative;z-index:1}
+.wa-insta a{color:var(--blue);font-weight:600;text-decoration:none;transition:color .2s}
+.wa-insta a:hover{color:var(--red)}
+
+/* ─── FLOATING WA ─── */
+.wafloat{position:fixed;bottom:1.75rem;right:1.75rem;z-index:9997;width:56px;height:56px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(37,211,102,.4);text-decoration:none;animation:wabounce 3s ease-in-out infinite;transition:transform .2s}
+.wafloat:hover{transform:scale(1.12)!important;animation:none}
+@keyframes wabounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.wftip{position:absolute;right:64px;background:var(--tx);color:#fff;padding:.36rem .8rem;border-radius:7px;font-size:.74rem;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.wftip::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:5px solid var(--tx)}
+.wafloat:hover .wftip{opacity:1}
+
+/* ─── FOOTER ─── */
+footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem}
+.foot-in{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.25rem}
+.flogo{display:flex;align-items:center;gap:10px}
+.flic{width:34px;height:34px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.flt{font-family:'Playfair Display',serif;color:#fff;font-size:1rem;font-weight:700}
+.flinks{display:flex;gap:1.5rem;list-style:none}
+.flinks a{color:rgba(255,255,255,.52);text-decoration:none;font-size:.82rem;transition:color .2s}
+.flinks a:hover{color:#fff}
+.fcp{font-size:.76rem;color:rgba(255,255,255,.32)}
+
+/* ─── BOTÃO SISTEMA ─── */
+.nsistema{
+  display:inline-flex;align-items:center;gap:7px;
+  background:transparent;color:var(--blue);
+  border:1.5px solid var(--gl);
+  padding:.48rem 1rem;border-radius:8px;
+  text-decoration:none;font-size:.82rem;font-weight:600;
+  transition:all .2s;margin-right:.5rem;
+}
+.nsistema:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.footer-sistema{
+  display:inline-flex;align-items:center;gap:6px;
+  color:rgba(255,255,255,.55);text-decoration:none;
+  font-size:.82rem;transition:color .2s;
+}
+.footer-sistema:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#hero" class="nlogo">
+    <div class="nico">⚕️</div>
+    <div>
+      <div class="ntxt">Farmácia Couto</div>
+      <div class="nsub">Saúde &amp; Bem-estar</div>
+    </div>
+  </a>
+  <ul class="nlinks">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#endereco">Localização</a></li>
+    <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#whatsapp">Contato</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:.5rem">
+    <a href="sistema.html" class="nsistema">
+      🔐 Área Interna
+    </a>
+    <a href="https://api.whatsapp.com/send/?phone=5575991154571&text&type=phone_number&app_absent=0&utm_source=ig"
+       target="_blank" rel="noopener" class="nwa">
+      <svg viewBox="0 0 24 24" fill="white" width="15" height="15"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+
+<!-- ═══════════════════ 1. HERO ═══════════════════ -->
+<section id="hero">
+  <div class="hbg">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hov"></div>
+    <div class="hsh h1"></div><div class="hsh h2"></div><div class="hsh h3"></div>
+    <div class="hgr"></div>
+  </div>
+  <div class="hcon">
+    <div>
+      <div class="hbadge"><div class="hpul"></div> Cuidando da sua saúde e bem-estar</div>
+      <h1 class="htit">Saúde de <em>qualidade</em><br>ao seu alcance</h1>
+      <p class="hdesc">Na Farmácia Couto você encontra atendimento humanizado, manipulação farmacêutica, exames e produtos selecionados para cuidar de você e da sua família.</p>
+      <div class="hact">
+        <a href="https://api.whatsapp.com/send/?phone=5575991154571&text&type=phone_number&app_absent=0&utm_source=ig"
+           target="_blank" rel="noopener" class="hbtn-wa">
+          <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Falar no WhatsApp
+        </a>
+        <a href="#sobre" class="hbtn-o">Conheça a farmácia</a>
+      </div>
+      <div class="hstats">
+        <div class="hst"><strong>20+</strong><span>Anos de experiência</span></div>
+        <div class="hst"><strong>5k+</strong><span>Clientes atendidos</span></div>
+        <div class="hst"><strong>100%</strong><span>Produtos certificados</span></div>
+      </div>
+    </div>
+    <div class="hvis">
+      <div style="position:relative;width:100%;max-width:340px">
+        <div class="hcard">
+          <div class="hcico">💊</div>
+          <div class="hctit">Atendimento Especializado</div>
+          <div class="hctxt">Nossa equipe está pronta para orientar sobre medicamentos e tratamentos com todo cuidado e atenção que você merece.</div>
+          <div class="hcpil">✓ Disponível todos os dias</div>
+        </div>
+        <div class="chip c1"><div class="cdot"></div> Manipulação própria</div>
+        <div class="chip c2"><div class="cdot r"></div> Entrega em domicílio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 2. SOBRE ═══════════════════ -->
+<section id="sobre">
+  <div class="si">
+    <div class="sg">
+      <div class="svis rv">
+        <div class="sbox">
+          <div class="sbg-ico">🏥</div>
+          <div class="sov">
+            <div class="sov-ico">⚕️</div>
+            <h3>Farmácia Couto</h3>
+            <p>Tradição e cuidado desde 2005</p>
+          </div>
+        </div>
+        <div class="sbadge"><strong>20+</strong><span>anos no mercado</span></div>
+      </div>
+      <div class="rv">
+        <div class="stag">Nossa História</div>
+        <h2 class="stit">Sobre a <span>Farmácia Couto</span></h2>
+        <p class="sdesc">Fundada com o propósito de oferecer saúde e bem-estar com acessibilidade e cuidado, a Farmácia Couto é referência em atendimento humanizado na região. Nossa equipe é formada por profissionais comprometidos com a qualidade de vida de cada cliente.</p>
+        <div class="sfeats">
+          <div class="feat">
+            <span class="fi">🤝</span>
+            <div><div class="ft">Atendimento Humanizado</div><div class="fd">Cada cliente é tratado com atenção individual e respeito. Saúde é assunto sério e merece cuidado de verdade.</div></div>
+          </div>
+          <div class="feat">
+            <span class="fi">⚗️</span>
+            <div><div class="ft">Manipulação Farmacêutica</div><div class="fd">Fórmulas personalizadas preparadas com rigor técnico e os melhores insumos disponíveis no mercado.</div></div>
+          </div>
+          <div class="feat">
+            <span class="fi">🔬</span>
+            <div><div class="ft">Exames e Produtos de Qualidade</div><div class="fd">Trabalhamos com fornecedores certificados e produtos aprovados pelos órgãos regulatórios.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 3. ENDEREÇO ═══════════════════ -->
+<section id="endereco">
+  <div class="si">
+    <div class="end-grid">
+      <div class="rv">
+        <div class="stag">Onde Estamos</div>
+        <h2 class="stit">Nossa <span>Localização</span></h2>
+        <p class="sdesc">Estamos em local de fácil acesso para melhor atendê-lo. Venha nos visitar ou fale com a gente antes de vir.</p>
+        <div class="end-items">
+          <div class="end-item">
+            <div class="end-ico ei-r">📍</div>
+            <div><strong>Endereço</strong><span>Consulte a localização no mapa ao lado</span></div>
+          </div>
+          <div class="end-item">
+            <div class="end-ico ei-b">📞</div>
+            <div><strong>WhatsApp / Telefone</strong><span>(75) 99115-4571</span></div>
+          </div>
+          <div class="end-item">
+            <div class="end-ico ei-g">🕐</div>
+            <div><strong>Horário de Funcionamento</strong><span>Seg–Sex: 07h–22h &nbsp;|&nbsp; Sáb: 08h–20h &nbsp;|&nbsp; Dom: 08h–14h</span></div>
+          </div>
+          <div class="end-item">
+            <div class="end-ico ei-b">📸</div>
+            <div><strong>Instagram</strong><span>@farmaciacouto</span></div>
+          </div>
+        </div>
+        <a href="https://maps.app.goo.gl/oDvsXNmiWBeBrKQf6" target="_blank" rel="noopener" class="end-map-btn">
+          🗺️ Abrir no Google Maps
+        </a>
+      </div>
+      <div class="rv">
+        <div class="map-wrap">
+          <iframe
+            src="https://maps.google.com/maps?q=-14.861,-39.849&z=16&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Localização Farmácia Couto"
+            allowfullscreen>
+          </iframe>
+          <a href="https://maps.app.goo.gl/oDvsXNmiWBeBrKQf6" target="_blank" rel="noopener" class="map-link">
+            🗺️ Ver rota completa
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 4. DIFERENCIAIS ═══════════════════ -->
+<section id="diferenciais">
+  <div class="si din">
+    <div class="stag rv">Por que nos escolher</div>
+    <h2 class="stit rv">Nossos <span>Diferenciais</span></h2>
+    <p class="sdesc rv">Veja o que torna a Farmácia Couto a melhor escolha para cuidar da sua saúde e da sua família.</p>
+    <div class="dg">
+      <div class="dc rv"><span class="di">🏆</span><strong>20 Anos de Tradição</strong><p>Décadas de experiência e confiança construída com cada cliente atendido na região.</p></div>
+      <div class="dc rv"><span class="di">🚚</span><strong>Entrega em Domicílio</strong><p>Receba seus medicamentos e produtos com comodidade, sem precisar sair de casa.</p></div>
+      <div class="dc rv"><span class="di">💬</span><strong>Atendimento via WhatsApp</strong><p>Tire dúvidas, faça pedidos e receba orientações direto pelo seu celular, a qualquer hora.</p></div>
+      <div class="dc rv"><span class="di">⚗️</span><strong>Manipulação Própria</strong><p>Fórmulas personalizadas com rigor técnico, insumos certificados e controle de qualidade.</p></div>
+      <div class="dc rv"><span class="di">💰</span><strong>Preço Justo</strong><p>Trabalhamos para oferecer o melhor custo-benefício, sempre com total transparência.</p></div>
+      <div class="dc rv"><span class="di">👨‍⚕️</span><strong>Equipe Especializada</strong><p>Farmacêuticos e atendentes treinados para te orientar com responsabilidade e cuidado.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 5. WHATSAPP ═══════════════════ -->
+<section id="whatsapp">
+  <div class="wa-inner">
+    <div class="wa-card rv">
+      <div class="wa-ico">
+        <svg viewBox="0 0 24 24" fill="white" width="46" height="46"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </div>
+      <h2 class="wa-title">Fale com a gente agora</h2>
+      <p class="wa-desc">Nossa equipe está pronta para tirar dúvidas, receber pedidos e te orientar sobre medicamentos e tratamentos. Resposta rápida e atendimento humanizado.</p>
+      <a href="https://api.whatsapp.com/send/?phone=5575991154571&text&type=phone_number&app_absent=0&utm_source=ig"
+         target="_blank" rel="noopener" class="wa-btn">
+        <svg viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Conversar no WhatsApp
+      </a>
+      <p class="wa-num">Número: <strong>(75) 99115-4571</strong></p>
+      <div class="wa-insta">
+        <span>Siga também:</span>
+        <a href="https://instagram.com/farmaciacouto" target="_blank" rel="noopener">@farmaciacouto no Instagram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-in">
+    <div class="flogo"><div class="flic">⚕️</div><span class="flt">Farmácia Couto</span></div>
+    <ul class="flinks">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#endereco">Localização</a></li>
+      <li><a href="#diferenciais">Diferenciais</a></li>
+      <li><a href="#whatsapp">WhatsApp</a></li>
+      <li><a href="sistema.html" class="footer-sistema">🔐 Área Interna</a></li>
+    </ul>
+    <p class="fcp">© 2025 Farmácia Couto. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://api.whatsapp.com/send/?phone=5575991154571&text&type=phone_number&app_absent=0&utm_source=ig"
+   target="_blank" rel="noopener" class="wafloat">
+  <span class="wftip">Falar no WhatsApp</span>
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<script>
+// ── HERO CANVAS ──────────────────────────────────────────
+(function(){
+  var cv=document.getElementById('heroCanvas');
+  if(!cv)return;
+  var ctx=cv.getContext('2d'),W,H,pts;
+  function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;}
+  function mkPts(n){
+    pts=[];
+    for(var i=0;i<n;i++)pts.push({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38,
+      r:Math.random()*2.4+.9,pulse:Math.random()*Math.PI*2
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var DIST=135;
+    pts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      p.pulse+=.018;
+    });
+    for(var i=0;i<pts.length;i++){
+      for(var j=i+1;j<pts.length;j++){
+        var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<DIST){
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle='rgba(255,255,255,'+(1-d/DIST)*.22+')';ctx.lineWidth=1;ctx.stroke();
+        }
+      }
+    }
+    pts.forEach(function(p){
+      var pulse=.7+.3*Math.sin(p.pulse);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*pulse,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.5)';ctx.fill();
+      if(p.r>2.5){
+        ctx.strokeStyle='rgba(200,16,46,.65)';ctx.lineWidth=1.4;
+        var s=4.5;
+        ctx.beginPath();ctx.moveTo(p.x-s,p.y);ctx.lineTo(p.x+s,p.y);
+        ctx.moveTo(p.x,p.y-s);ctx.lineTo(p.x,p.y+s);ctx.stroke();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',function(){resize();mkPts(58);});
+  resize();mkPts(58);draw();
+})();
+
+// ── SCROLL REVEAL ────────────────────────────────────────
+(function(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e,i){
+      if(e.isIntersecting)setTimeout(function(){e.target.classList.add('vis');},i*75);
+    });
+  },{threshold:.08,rootMargin:'0px 0px -28px 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){obs.observe(el);});
+})();
+</script>
+</body>
+</html>
